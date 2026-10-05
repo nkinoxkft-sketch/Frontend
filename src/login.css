@@ -1,0 +1,507 @@
+
+
+:root {
+  --bg-paper: #eee8d5; /* Meleg törtfehér */
+  --text-main: #1C1B1A; /* Majdnem fekete */
+  --text-muted: #5C5B5A; /* Sötétszürke */
+  
+  --accent-color: #D97757;
+  --border-color: #c5c4c2;
+  
+  --font-serif: 'Georgia', 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.Login-card {
+
+  position: absolute; 
+  top: 90%;
+  right: 0;
+  background: white;
+  z-index: 1000;
+  background-color: white;
+  max-width: 360px;
+  min-width: 250px;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  border: solid 1px #c5c4c2;
+
+}
+
+.google-btn{
+    width: 100%;
+    
+}
+
+@media (max-width: 494px) {
+  .Login-card {
+    right: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .Login-card {
+    width: 360px;    
+
+  }
+}
+
+#title-card-login{
+
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-family: var(--font-sans);
+
+}
+
+.loginbuttonslist{
+
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.logbuttons{
+
+    color: #5C5B5A;
+    background-color: white;
+    border: solid 1px #c5c4c2;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    width: 100%;
+    text-decoration: none;
+
+
+
+}
+
+.google-custom-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    color: #3c4043;
+    font-family: 'Roboto', 'Segoe UI', sans-serif; /* A Google által preferált betűtípus */
+    font-size: 14px;
+    font-weight: 500;
+    width: 100%;         /* Igazítsd a fekete gombod szélességéhez */
+    height: 40px;         /* Szabvány Google magasság */
+    border: 1px solid #dadce0;
+    border-radius: 4px;   
+    cursor: pointer;
+    margin-bottom: 15px;
+    padding: 0 12px 0 8px;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.google-custom-btn:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+}
+
+.google-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+}
+
+.google-btn-text {
+    flex-grow: 1;
+    text-align: center;
+    padding-right: 24px; /* Optikailag középre húzza a szöveget a logó ellenére is */
+}
+
+.logbuttons:hover{
+
+    color: #c5c4c2;
+
+}
+
+.sign{
+
+    color: #eee8d5;
+    background-color: #1C1B1A;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    border: 0px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0rem ;
+    padding-right: 0rem ;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    max-width: 100%;
+    
+
+}
+
+.logbuttons svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+}
+
+
+
+.textunderbuttons{
+
+    color: #5C5B5A;
+    font-size: 0.8rem;
+    font-family: var(--font-sans);
+    padding: 0.5rem;
+    width: fit-content;
+    
+
+}
+
+.registertext{
+
+    color: #1C1B1A;
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+    text-align: center;
+
+}
+.reg{
+
+    color: #eee8d5;
+    background-color: #1C1B1A;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    border: 0px;
+    padding: 0.5rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+.regDiv{
+  display: flex;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.reg:hover{
+
+    color: #c5c4c2;
+
+}
+
+.loginPage{
+
+  display: flex;
+  justify-content: center; 
+  align-items: center;           
+  background-color: #eee8d5;    
+  padding: 2rem;
+  flex-direction: column;
+  
+}
+.loginPageBox{
+
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    border-top: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
+    background-color: white;
+
+
+}
+
+#loginPageTextSignIn{
+
+    text-align: Left;
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+
+}
+
+.loginPageText{
+
+    text-align: Left;
+    font-size: 1rem;
+    font-weight: 500;
+
+    font-family: var(--font-sans);
+    
+}
+
+.loginpagebutton{
+
+    color: #5C5B5A;
+    background-color: white;
+    border: solid 1px #c5c4c2;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+
+}
+
+
+
+.forgotb{
+
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border: 0px white;
+    justify-content: right;
+    text-align: right;
+}
+.logpageforgot{
+
+    border: 0px;
+    text-align: right;
+    justify-content: right;
+    color: #1C1B1A;
+    width: fit-content;
+    padding: 0rem;
+ 
+
+}
+
+.logpageforgot:hover{
+
+    color:#5C5B5A;
+
+}
+
+.wrongPass{
+
+  font-size: 14px;
+  line-height: 1.4;
+  color: #D97757;
+
+}
+.logpagesign{
+
+    color: white;
+    background-color: #1C1B1A;
+    border: 0px;
+    margin-bottom:  1rem;;
+}
+
+.logpagesign:hover{
+
+    color: #5C5B5A   ;
+}
+
+.logpageboxfirst{
+
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #c5c4c2;
+    justify-content: center;
+
+}
+
+
+.logpageboxfirst{
+
+    margin-bottom: 1rem;
+}
+
+.loginpagebutton svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+}
+
+
+.regb{
+
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+}
+.logpageregister{
+
+    color: #5C5B5A;
+    border: 0px;
+    justify-content: center;
+    margin: 0px;
+    display: block;
+    text-align: center;
+    padding: 0rem;
+    width: fit-content;
+}
+.logpageregister:hover{
+
+    text-decoration: underline;
+}
+
+.loginPageUnder{
+
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    border: 1px solid rgba(54, 53, 53, 0.384);
+    border-bottom-left-radius: 2px ;
+    border-bottom-right-radius: 2px ;
+    background-color: rgb(214, 209, 209);
+    
+
+}
+
+.termslogpage{
+
+    text-align: Left;
+    font-size: 0.9rem;
+    font-weight: 200;
+    margin-bottom: 0.1rem;
+    color: #5C5B5A;
+}
+.logpagetextanother{
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    text-align: center;
+    font-family: var(--font-sans);
+    margin-top: 2rem;
+}
+
+.regpagesign{
+
+    color: #eee8d5;
+    background-color: #1C1B1A;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    border: 0px;
+    padding: 1rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+
+}
+
+.regpagesign:hover{
+
+    color: #5C5B5A;
+
+}
+
+
+
+.forgot{
+
+    border: 1px solid rgba(54, 53, 53, 0.384);
+
+}
+
+#forgottext{
+
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #5C5B5A;
+}
+
+.descnomarg{
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    color: #5C5B5A;
+}
+
+
+
+.formdiv{
+
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    position: relative;
+    
+
+}
+.hidebdiv{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.errortext{
+
+    color: #b93838;
+    font-family: var(--font-sans);
+    padding-left: 0.5rem;
+
+}
+.i{
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+}
+
+.passb{
+
+    position: absolute;
+    right: 12px;
+    top: 72%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+
+}
+
+.s{
+
+    top: 62%;
+
+}
+
+.cloudflare{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+}
+
+.form{
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+.google{
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  
+}

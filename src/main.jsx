@@ -1,0 +1,48 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import './index.css'
+import App from './App.jsx'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+const queryClient = new QueryClient();
+
+import { createContext, useState, useContext, useEffect } from 'react';
+import { setOnUnauthorized } from './interceptor.jsx'
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+
+    const [isLogedIn, setIsLogedIn] = useState(false);
+
+    return (
+        <AuthContext.Provider value={{ isLogedIn, setIsLogedIn }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+}
+
+createRoot(document.getElementById('root')).render(
+  
+  <StrictMode>
+    <GoogleOAuthProvider clientId="711670289986-5fuuf4adudbcugr0k6u9ckq10feabbvv.apps.googleusercontent.com">
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter> 
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
+  </StrictMode>,
+)

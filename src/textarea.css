@@ -1,0 +1,57 @@
+:root {
+  --bg-paper-d: #131314; /* Meleg törtfehér */
+  --text-main-d: #1e1e1e; /* Majdnem fekete */
+  --text-muted: #5C5B5A; /* Sötétszürke */
+  
+  --accent-color: #D97757;
+  --border-color: #1e1e1e;
+  
+  --font-serif: 'Georgia', 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --font-text: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-size: 1rem;             
+  --line-height: 1.5;           
+  --font-weight: 400;            
+  --color: #e3e3e3;
+}
+
+.apply-div{
+
+    display: flex;
+    justify-content: right;
+}
+
+.apply{
+
+    justify-self: right;
+    width: fit-content;
+    color: white;
+    cursor: pointer;
+    background-color: var(--bg-paper-d);
+    border-radius: 10px;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+}
+
+.apply:hover{
+
+    color: var(--text-muted);
+}
+
+.stop-sendbutton{
+
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1f1f1f;
+    opacity: 0.3; 
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+    opacity: 1;
+    color: #0b57d0; 
+}

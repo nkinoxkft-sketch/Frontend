@@ -1,0 +1,254 @@
+
+:root {
+  --bg-paper: #eee8d5; /* Meleg törtfehér */
+  --text-main: #1C1B1A; /* Majdnem fekete */
+  --text-muted: #5C5B5A; /* Sötétszürke */
+  
+  --accent-color: #D97757;
+  --border-color: #c5c4c2;
+  
+  --font-serif: 'Georgia', 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+
+.pagemid{
+
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Az overlay ami letakarja az oldalt */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* A dizájnhoz illeszkedő törtfehér/bézs háttérszín[cite: 3] */
+  background-color: #f2ebd9; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Elegáns, minimalista betöltő animáció, ami a sötét gombokhoz igazodik[cite: 3] */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(34, 34, 34, 0.1);
+  border-top-color: #1a1a1a; 
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 24px;
+}
+
+/* A főcímhez (Access Claude...) használt klasszikus talpas (serif) stílus[cite: 3] */
+.loading-title {
+  font-family: "Georgia", "Times New Roman", serif;
+  color: #1a1a1a;
+  font-size: 2.2rem;
+  font-weight: 400;
+  margin: 0 0 12px 0;
+  letter-spacing: 0.5px;
+}
+
+/* Az alcímhez (Affordable Claude API Access) használt terrakotta/narancsos szín[cite: 3] */
+.loading-subtitle {
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #c97a63; 
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.poptions{
+
+    display: flex;
+    justify-content: space-between;
+    border-bottom: none;
+    color: #5C5B5A;
+}
+
+.insidep{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+}
+
+.paybutton{
+
+    width: 100%;
+    border: 1px solid #eee8d5;
+    background-color: white;
+    padding: 1rem;
+    border-bottom: none;
+    border-radius: 0px;
+}
+
+.blast{
+    border-bottom: 1px solid #eee8d5;
+}
+
+.debit{
+    max-width: 20px;
+}
+
+.paypall{
+    height: 20px;
+}
+.pagemid{
+
+    gap:2rem
+}
+
+.s2{
+
+    border: solid 1px #c5c4c2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    padding: 2rem;
+    margin-top: 2rem;
+    background-color: white;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: 400px;
+    
+
+}
+
+.paypalldiv{
+
+    width: 300px;
+}
+
+
+
+.cost{
+    display: flex;
+    gap: 4rem;
+    justify-content: space-between;
+}
+
+.top{
+
+    padding: 0px;
+    border-bottom: 1px solid #eee8d5;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.spay{
+
+    border: solid 1px #c5c4c2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    padding: 2rem;
+    margin-top: 2rem;
+    background-color: white;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: 400px;
+}
+.b{
+    color: #FAF9F6;
+    background-color: #1C1B1A;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    border: 0px;
+    padding: 0.5rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.debits{
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.cardnum{
+
+    display: flex;
+    flex-direction: column;
+    
+
+}
+
+.labeltitle{
+
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+
+}
+
+.pinput{
+
+    width: 100%;
+}
+
+.moreinrow{
+
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.cvv{
+
+    width: 100%;
+
+}
+
+.changeplantitle{
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.changep{
+
+    font-size: 0.9rem;
+}
+
+.changetitlenomar{
+  
+
+    font-family: var(--font-sans);
+    font-size: 1.2rem;
+    font-weight: 500;
+
+    color: #1C1B1A;
+
+}
+.accept{
+    display:  flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    align-items:  center;
+    text-align: center;
+}
+
+.iscomp{
+
+    gap: 1rem;
+}
+
