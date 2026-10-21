@@ -4,6 +4,9 @@ import tailwindcss from '@tailwindcss/vite'; // <-- Ez a sor hiányzik a tetejé
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    sourcemap: true,
+  },
   plugins: [
     react(),
     tailwindcss(),
