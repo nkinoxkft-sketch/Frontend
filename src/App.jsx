@@ -263,7 +263,7 @@ function Main(){
 
       <section id='subscriptions' className='subDiv'>
         
-        {(subscriptions && !isLoading)  && ( 
+        {(Array.isArray(subscriptions) && !isLoading)  && ( 
         <div className='subCards'>
           {subscriptions.map((cardItem) => (
           
