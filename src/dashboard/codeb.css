@@ -1,0 +1,155 @@
+/* =========================================
+   Code Block & Syntax Highlighter (Gemini Dark)
+   Előtag: ccode-
+   ========================================= */
+
+.ccode-wrapper {
+  margin: 16px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #2D2D2D;
+  background-color: #1E1E1E;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Fejléc sáv */
+.ccode-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #292929;
+  padding: 8px 16px;
+  border-bottom: 1px solid #2D2D2D;
+  font-family: 'Google Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  user-select: none;
+}
+
+/* Nyelv megnevezése */
+.ccode-lang {
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #9AA0A6;
+}
+
+/* Másolás gomb */
+.ccode-copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #BDC1C6;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ccode-copy-btn:hover {
+  background-color: #2D2D2D;
+  border-color: #3C4043;
+  color: #E8EAED;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.ccode-copy-btn:active {
+  transform: scale(0.95);
+}
+
+/* Ikonok */
+.ccode-icon {
+  width: 16px;
+  height: 16px;
+  color: #9AA0A6;
+  transition: color 0.2s;
+}
+
+.ccode-copy-btn:hover .ccode-icon {
+  color: #E8EAED;
+}
+
+.ccode-icon-success {
+  color: #81C995 !important; /* Gemini zöld */
+}
+
+/* Sikeres másolás szöveg */
+.ccode-text-success {
+  color: #81C995;
+  font-weight: 500;
+}
+
+/* Kód tartalom (ha szükséges) */
+.ccode-content {
+  background-color: #1E1E1E;
+  color: #E8EAED;
+  padding: 16px;
+  overflow-x: auto;
+  font-family: 'Google Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Kód görgetősáv */
+.ccode-content::-webkit-scrollbar {
+  height: 8px;
+}
+
+.ccode-content::-webkit-scrollbar-thumb {
+  background-color: #3C4043;
+  border-radius: 4px;
+}
+
+.ccode-content::-webkit-scrollbar-thumb:hover {
+  background-color: #5F6368;
+}
+
+.ccode-content::-webkit-scrollbar-track {
+  background-color: #292929;
+}
+
+/* Szintaxis kiemelés (opcionális - alapértelmezett színek) */
+.ccode-content pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: #E8EAED;
+}
+
+.ccode-content code {
+  color: #E8EAED;
+  background: transparent;
+}
+
+/* Token színek - Gemini-szerű paletta */
+.ccode-keyword {
+  color: #8AB4F8; /* Kék - kulcsszavak */
+}
+
+.ccode-string {
+  color: #81C995; /* Zöld - stringek */
+}
+
+.ccode-number {
+  color: #FDD663; /* Sárga - számok */
+}
+
+.ccode-comment {
+  color: #9AA0A6; /* Szürke - kommentek */
+  font-style: italic;
+}
+
+.ccode-function {
+  color: #A8C7FA; /* Világoskék - függvények */
+}
+
+.ccode-operator {
+  color: #BDC1C6; /* Világosszürke - operátorok */
+}
+
+.ccode-variable {
+  color: #F28B82; /* Piros/rózsaszín - változók */
+}

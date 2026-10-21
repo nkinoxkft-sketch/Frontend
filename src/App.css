@@ -1,6 +1,6 @@
 
 :root {
-  --bg-paper: #e9e5d8; /* Meleg törtfehér */
+  --bg-paper: #F1F5F9; /* Meleg törtfehér */
   --text-main: #1C1B1A; /* Majdnem fekete */
   --text-muted: #5C5B5A; /* Sötétszürke */
     --border-color: #1e1e1e;
@@ -11,11 +11,28 @@
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+.screen{
 
+  height: 100dvh;
+  max-height: 100dvh;
+  position: relative;
+}
+body {
+
+  background-color: var(--bg-paper);
+  margin: 0; 
+  padding: 0;
+
+}
+
+.dash-bg{
+
+  background-color:#131314 ;
+  
+}
 .mainPage{
 
-
-    background-color: var(--bg-paper);
+  background-color: var(--bg-paper);
 
 
 }
@@ -58,20 +75,9 @@
 
 }
 
-html {
-
-  background-color: var(--bg-paper); 
-
-}
 
 
-body {
 
-
-  margin: 0; 
-  padding: 0;
-
-}
 
 
 main {
@@ -101,23 +107,11 @@ scrollbar-width: none;
     background-color: var(--bg-paper);
 
 }
-.navBar{
-    
-    display: flex;
-    flex-direction: row;
-    border-bottom: #c5c4c2 1px solid;
-    justify-content: space-between;
-    padding: 1rem;
-    flex-wrap: wrap;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: var(--bg-paper);
 
 
-}
+
+
+
 
 .relativebutton{
 

@@ -8,10 +8,10 @@ export const BackendError = ({error}) =>{
 
                     return fieldData.errors && fieldData.errors.length > 0 ? (
                     <div key={fieldName} className="field-error-group">
-                        <strong>{fieldName}:</strong>
+                        
                         <ul>
                         {fieldData.errors.map((errorMsg, index) => (
-                            <li key={index} className="errortext">{errorMsg}</li>
+                            <li key={index} className="error-message">{errorMsg}</li>
                         ))}
                         </ul>
                     </div>
@@ -21,7 +21,7 @@ export const BackendError = ({error}) =>{
             )}
             {!error?.properties && (
                 <div>
-                    <p className="errortext">{error}</p>
+                    <p className="error-message">{error}</p>
                 </div>
 
             )}

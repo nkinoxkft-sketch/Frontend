@@ -14,7 +14,7 @@ export default defineConfig({
     allowedHosts: ['.ngrok-free.dev'],
     proxy: {
       '/api': {
-        target: 'http://172.20.10.4:8080', // A backended futási címe
+        target: 'http://192.168.56.1:8080', // A backended futási címe
         changeOrigin: true,
         secure: false,
       },

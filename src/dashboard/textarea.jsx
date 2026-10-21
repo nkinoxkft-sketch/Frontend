@@ -1,15 +1,31 @@
 import { useEffect } from 'react';
 import './textarea.css';
 import { useRef, useState } from 'react';
-import plus from './assets/plus.svg'
-import { useSub } from '../useStates/useSub';
-import { useUser } from '../useStates/useUser';
+import plus from '../assets/plus.svg'
+import { useSub } from '../../useStates/useSub.jsx';
+import { useUser } from '../../useStates/useUser.jsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { api, setAccessToken, getAccessToken} from './interceptor';
+import { api, setAccessToken, getAccessToken} from '../interceptor.jsx';
 import axios from 'axios';
+import ModelDropdown from '../mode.jsx';
 
-export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionName, responseText, setSessionName, setResponseText, limit, setDashboard}) =>{
+
+const uploadToR2 = async (file, file_data) =>{  
+
+    //console.log(file, file_data)
+
+    const res = await fetch(file_data.uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.file.type },
+        body: file.file 
+    })
+
+    return file_data.uniqueFileKey
+
+
+}
+export const Textarea = ( { new_tab, isChangedTab, isLoading, setIsLoading, current_session_id_ref, setResponseText, number_of_messages_loaded, sent_message}) =>{
 
     const { user } = useUser();
     const { sub } = useSub();
@@ -20,7 +36,6 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
 
     const [files, setFiles] = useState([]);
     const [selectedModel, setSelectedModel] = useState('Sonnet');
-    const [selectedEffort, setSelectedEffort] = useState('Low');
     const [isDragging, setIsDragging] = useState(false);
     const [comment, setComment] = useState('');
     const [isOpenPlus, setIsOpenPlus] = useState(false);
@@ -60,6 +75,26 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
     const MAX_FILE_SIZE = 10 * 1024 * 1024; 
 
     const handlePaste = (e) => {
+
+        e.preventDefault();
+
+        // Kinyerjük a sima, formázatlan szöveget a vágólapról
+        const text = e.clipboardData.getData('text/plain');
+
+        // Beszúrjuk a kurzor aktuális pozíciójára sima szövegként
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+        
+        selection.deleteFromDocument();
+        selection.getRangeAt(0).insertNode(document.createTextNode(text));
+
+        // A kurzort áttesszük a beillesztett szöveg végére
+        selection.collapseToEnd();
+
+        // Kiváltjuk a handleChange-et, hogy a state és az automatikus méretezés frissüljön
+        if (textareaRef.current) {
+            textareaRef.current.dispatchEvent(new Event('input', { bubbles: true }));
+        }
 
         const clipboardFiles = e.clipboardData?.files;
 
@@ -177,6 +212,8 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
     const abortControllerRef = useRef(null);
 
     const handleSend = async () => {
+
+        //console.log(new_tab.current)
         
 
         if(isLoading){
@@ -187,6 +224,8 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
 
         setIsLoading(true)
 
+        isChangedTab.current = false
+
         abortControllerRef.current = new AbortController();
 
         const messageText = textareaRef.current.textContent.trim();
@@ -195,26 +234,51 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
 
             try{
             
-                const formData = new FormData();
-            
-                    formData.append('promt', messageText);     
-                    console.log(sessionName, 'kuldott session name')
-                    formData.append('sessionName', sessionName);  
-                    formData.append('isNewTab', newTab);   
-                    formData.append('instruct', comment);     
-                    formData.append('email', user.email);    
-                    formData.append('model', selectedModel); 
-                    console.log('FormData sessionName:', formData.get('sessionName'));
+                    const fileStats = []
 
-                    files.forEach((item) => {
+                    for(const iter of files){
+                        console.log(iter.file)
+                        fileStats.push({ fileName: iter.file.name, fileType: iter.file.type, fileSize: iter.file.size })
+                    }
 
-                        formData.append('files', item.file); 
+                    let urls;
 
-                    });
+                    if(fileStats.length !== 0){
 
-                if(newTab){
+                        urls = await api.post('/getUploadUrl', {
+                            files: fileStats
+                        });
 
-                    setNewTab(false);
+                    }
+
+
+
+                    let promises = []
+
+                    for(const [index, file] of files.entries()){
+
+
+                        promises.push(uploadToR2(file, urls.data[index]));
+
+                    }
+
+                    const keys = await Promise.all(promises);
+
+                    const data = {
+
+                        prompt: messageText,
+                        sessionId: current_session_id_ref.current,
+                        isNewTab: new_tab.current,
+                        instruct: comment,
+                        email: user.email,
+                        model: selectedModel,
+                        keys: keys,
+                    }
+
+                
+                if(new_tab.current){
+
+                    new_tab.current = false;
 
                 }    
 
@@ -223,14 +287,16 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
                 let response;
 
                 while(attemps < 2){
+                    console.log(data)
 
                     response = await fetch('/api/ask', {
                         method: 'POST',
                         signal: abortControllerRef.current.signal,
                         headers: {
-                            'Authorization': `Bearer ${getAccessToken()}`
+                            'Authorization': `Bearer ${getAccessToken()}`,
+                            'Content-Type': 'application/json'
                         },
-                        body: formData 
+                        body: JSON.stringify(data) 
                     });
 
                     if(response.status === 403){
@@ -253,8 +319,11 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
 
                 }
 
-                setResponseText((prev) => [...prev, { sender: 'user', text: messageText }]);
-                setResponseText((prev) => [...prev, { sender: 'user', file: files }]);
+                setResponseText((prev) => [...prev, { sender: 'user', text: messageText, isComplete: false  }]);
+                if(files.length > 0){
+                    setResponseText((prev) => [...prev, { sender: 'user', file: files, isComplete: false  }]);
+                }
+                sent_message.current = true;
 
                 if (textareaRef.current) {
 
@@ -271,44 +340,73 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
                 }
 
                 const sessionId = response.headers.get('X-Session-ID');
-                setSessionName(sessionId);
+                //setSessionName(sessionId);
+                current_session_id_ref.current = sessionId
           
                 const reader = response.body.getReader();
-                const decoder = new TextDecoder('utf-8');
-                setResponseText((prev) => [...prev, { sender: 'claude', text: '' }]);
-          
-                while (true) {
-                  const { value, done } = await reader.read();
+const decoder = new TextDecoder('utf-8');
+setResponseText((prev) => [...prev, { sender: 'claude', text: '', isComplete: false }]);
+
+let accumulatedText = '';
+let lastUpdateTime = performance.now();
+const UPDATE_INTERVAL = 50; // Milliszekundum - ennyi időnkét frissítjük a UI-t
+
+while (true) {
+    const { value, done } = await reader.read();
+
+    if (done) {
+        console.log('A Claude befejezte a választ.');
+        break;
+    }
+
+    const chunk = decoder.decode(value, { stream: true });
+    accumulatedText += chunk;
+    const now = performance.now();
+
+    // Csak akkor frissítjük a state-et, ha letelt az időintervallum
+    if (now - lastUpdateTime >= UPDATE_INTERVAL) {
+        const textToAdd = accumulatedText;
+        accumulatedText = ''; // Puffer kiürítése
+        lastUpdateTime = now;
+
+        setResponseText((prev) => {
+            const updated = [...prev];
+            const lastIndex = updated.length - 1;
+
+            if (lastIndex >= 0) {
+                updated[lastIndex] = {
+                    ...updated[lastIndex],
+                    text: updated[lastIndex].text + textToAdd,
+                    isComplete: false 
+                };
+            }
+            return updated;
+        });
+    }
+}
+
+// Ciklus végén beírjuk a maradék pufferelt szöveget is, ha maradt
+if (accumulatedText.length > 0) {
+    const finalAdd = accumulatedText;
+    setResponseText((prev) => {
+        const updated = [...prev];
+        const lastIndex = updated.length - 1;
+        if (lastIndex >= 0) {
+            updated[lastIndex] = {
+                ...updated[lastIndex],
+                text: updated[lastIndex].text + finalAdd,
+                isComplete: false 
+            };
+        }
+        return updated;
+    });
+}
                 
-                  if (done) {
-                    console.log('A Claude befejezte a választ.');
-                    break;
-                  }
-              
-                  const chunk = decoder.decode(value, { stream: true });
-              
-                  setResponseText((prev) => {
-                    const updated = [...prev];
-                    const lastIndex = updated.length - 1;
-
-                    if (lastIndex >= 0) {
-                      updated[lastIndex] = {
-                        ...updated[lastIndex],
-                        text: updated[lastIndex].text + chunk,
-                      };
-                    }
-
-                    return updated;
-                  });
-                }
-            
-      
-                setIsLoading(false)
             
                 queryClient.invalidateQueries({ queryKey: ['sessions'] });
                 queryClient.invalidateQueries({ queryKey: ['subData'] });
 
-                limit.current = limit.current + 1
+                number_of_messages_loaded.current = number_of_messages_loaded.current + 1
           
             }catch(err){
 
@@ -330,13 +428,12 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
     const stopGenerating = () => {
         if (abortControllerRef.current) {
             abortControllerRef.current.abort(); 
+            setIsLoading(false)
         }
     };    
 
     const setInstruction = async (instruction) =>{
   
-        const token = localStorage.getItem('token')
-
         const response = await api.post('/setInstruction', {
             instruction: instruction
         });
@@ -362,51 +459,23 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                 > 
-                    <div className='plus-dv'>
+                    <div className='chat-options-container'>
 
-                        <img src={plus} onClick={() => {setIsOpenPlus(!isOpenPlus); getInstruction()}} className = 'plus' alt='plus'/>
+                        <img src={plus} onClick={() => {setIsOpenPlus(!isOpenPlus); getInstruction()}} className='trigger-icon' alt='plus'/>
 
                         {isOpenPlus && (
-                            <div className='options-tab' ref={plusIconRer}>
-                                <div className='attach-boxes'>
-                                    <label htmlFor="file-upload" className="attach-btn" >
+                            <div className='options-popup' ref={plusIconRer}>
+                                <div className='file-upload-row'>
+                                    <label htmlFor="file-upload" className="file-upload-label" >
                                         📎
                                     </label>
-                                    <p className='texts'>Add files or photos</p>
+                                    <p className='option-label-text'>Add files or photos</p>
                                 </div>
-                                <div className='attach-boxes list'>
-                                    <p className='texts'>Effort</p>
-                                    <div>
-                                        <select 
-                                          value={selectedEffort} 
-                                          onChange={(e) => setSelectedEffort(e.target.value)}
-                                          className="model-selector"
-                                        >
-                                            <option value="Sonnet" className="models">Low</option>
-                                            <option value="Opus" className="models">Medium</option>
-                                            <option value="Haiku" className="models">Hight</option>
-                                            <option value="Haiku" className="models">Extra</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className='attach-boxes list'>
-                                    <p className='texts'>Model</p>
-                                    <div>
-                                        <select 
-                                          value={selectedModel} 
-                                          onChange={(e) => setSelectedModel(e.target.value)}
-                                          className="model-selector"
-                                        >   
-                                            <option value="Haiku" className="models">Haiku 4.5</option>
-                                            <option value="Sonnet" className="models">Sonnet 5</option>
-                                            <option value="Opus" className="models">Opus 5</option>
-                                        </select>
-                                  </div>
-                                </div>
-                                <div className='textera'>
-                                        <label htmlFor="user-comment" className='texts'>Instructions: </label>
-                                        <textarea
-                                        className='textbox'
+                            
+                                <div className='textarea-wrapper'>
+                                    <label htmlFor="user-comment" className='option-label-text'>Instructions: </label>
+                                    <textarea
+                                        className='custom-textarea'
                                         id="user-comment"
                                         value={comment}
                                         onChange={(e) => setComment(e.target.value)}
@@ -415,8 +484,9 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
                                         placeholder="Write your instructions here..."
                                     />
                                 </div>
-                                <div className='apply-div'>
-                                    <button className='apply' onClick={() => setInstruction(comment)}>Apply</button>
+                                
+                                <div className='action-footer'>
+                                    <button className='apply-btn' onClick={() => setInstruction(comment)}>Apply</button>
                                 </div>
                                 
                             </div>
@@ -435,22 +505,12 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
                         ref={textareaRef}
                         className="gemini-textarea"
                         
-                        contentEditable={(sub.status !== null && sub.messages !== '0') ? true : false} //NOSONAR (sub.messages && sub.messages !== '0')
-                        onClick={(sub.messages === '0' || sub.status === null) ? () =>{navigate('/'); setDashboard(false); setTimeout(() => {
-                                    const element = document.getElementById('subscriptions');
-                                    if (element) {
-
-                                        const elementPosition = element.getBoundingClientRect().top;
-                                        const scrollContainer = document.getElementById('mainPage');
-                                        
-                                        const offsetPosition = elementPosition + window.scrollY - 80;
-
-                                        scrollContainer.scrollTo({
-                                            top: offsetPosition,
-                                            behavior: 'smooth'
-                                        });
-                                    }
-                                }, 100);} : null }
+                        contentEditable={(sub.status !== null && Number(sub.messages) > 0) ? true : false} //NOSONAR (sub.messages && sub.messages !== '0')
+                        onClick={(sub.messages === '0' || sub.status === null) ? () => {
+                            void navigate('/', { state: { scrollToSubscriptions: true } })
+                            
+                      
+                        } : null}
                         suppressContentEditableWarning={true}
                         tabIndex={0}
                         onInput={(e) => {handleChange(e)}}
@@ -460,16 +520,16 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
                         role="textbox"
                         aria-multiline="true"
                         onBlur={() => {
-    // 1. Azonnali nullázás
-    window.scrollTo(0, 0);
+                                        // 1. Azonnali nullázás
+                                        window.scrollTo(0, 0);
 
-    // 2. Késleltetett nullázás, miután a billentyűzet animációja ténylegesen lefutott
-    setTimeout(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    }, 150);
-  }}
+                                        // 2. Késleltetett nullázás, miután a billentyűzet animációja ténylegesen lefutott
+                                        setTimeout(() => {
+                                        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                                        document.documentElement.scrollTop = 0;
+                                        document.body.scrollTop = 0;
+                                        }, 150);
+                                    }}
                     /> 
                     {files.length > 0 && (
                       <div className="file-preview-container">
@@ -494,9 +554,10 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
                         ))}
                       </div>
                     )}
+                    <ModelDropdown setSelectedModel={setSelectedModel} selectedModel={selectedModel}/>
                     {!isLoading && (
 
-                        <div>  
+                        <div className='midbutton'>  
                             <button 
                                 type='button'
                                 className={`send-button ${content !== '' ? 'active' : 'disabled'}`}
@@ -511,7 +572,7 @@ export const Textarea = ( {setIsLoading, isLoading, setNewTab, newTab, sessionNa
 
                     {isLoading && (
 
-                        <div>  
+                        <div className='midbutton'>  
                             <button 
                                 type='button'
                                 className={`stop-sendbutton`}

@@ -1,269 +1,137 @@
-import { useState, useEffect, useRef } from 'react';
-import { LoginPage, RegisterPage, ForgotPage, LoginCard } from './Login';
-import { ResetPage } from './forgot';
-import { ProfilCard, EditProfilePage, Auth} from './Profil';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { ResetPage } from './Auth/forgot';
+import {  Auth} from './Profil';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import {  Payment } from './payment';
-import { Dashboard } from './dashboard';
-import ai from './assets/ai.svg'
-import profil from './assets/profil.svg'
+import { Dashboard } from './dashboard/dashboard';
+
 import { usePub } from '../useStates/usePub';
 import { useSub } from '../useStates/useSub';
-import { api, setAccessToken, setOnUnauthorized } from './interceptor';
-import { resfreshStates } from '../useStates/refreshStates';
+import { api, setAccessToken } from './interceptor';
+
 import './App.css';
 import { useAuth } from './main';
-import { useQueryClient } from '@tanstack/react-query';
 
+import { NavBar } from './Navbar/Navbar';
+import { Shield } from './Shield/Shield';
+import { LoadingSpinner } from './Loading/Loading';
+import { LoginPage } from './Auth/LoginPage';
+import { RegisterPage } from './Auth/RegisterPage';
+import { ForgotPage } from './Auth/ForgotPage';
+import { EditProfilePage } from './Profil/Editpage';
 
-export function Shield({ children, setIsOpen }){
-
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [isChecking, setIsChecking] = useState(true);
-  
-  const { isLogedIn, setIsLogedIn } = useAuth()
-
-  useEffect(() => {
-
-    const refresh = async () =>{
-
-      const loginToken = localStorage.getItem('IsLogedin')
-
-      if(isLogedIn){
-
-        setIsChecking(false)
-
-      }
-
-      if(loginToken){
-
-        try{
-
-        const res = await api.post('/auth/refresh');
-
-        //console.log(res.data.accessToken)
-
-        setAccessToken(res.data.accessToken);
-
-        setIsLogedIn(true)
-
-        }catch(err){
-
-
-          if (location.pathname !== '/loginpage' && location.pathname !== '/') {
-            navigate('/loginpage', { state: { from: location } });
-            
-          }
-
-          setIsOpen(false)
-          setAccessToken(null);
-          setIsLogedIn(false)
-
-          console.log(err)
-
-        }
-        finally {
-
-          setIsChecking(false);
-
-        }
-
-      }    
-
-    }
-
-    refresh();
-
-  }, [location, navigate]);
-
-  if(!isChecking){
-
-    return children;
-
-  }
-}
-
+import './Profil/profil.css';
 function App() {
 
-  const [dashboard, setDashboard] = useState(false);
+  const { isLogedIn, setIsLogedIn } = useAuth();
+  const [ isVisibleNav, setIsVisibleNav ] = useState(false);
 
-  const [isOpen, setIsOpen] = useState(false);
-
-  const { isLogedIn, setIsLogedIn } = useAuth()
-  
-  const cardRef = useRef(null);
-
-  const location = useLocation();
-
+  const loc = useLocation();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
 
-    if(location.pathname !== '/dashboard'){
-      
-      setDashboard(false)
-      document.body.style.backgroundColor = '#e9e5d8';
+    if (loc.state?.scrollToSubscriptions) {
+     
+        setTimeout(() => {
+            const element = document.getElementById('subscriptions');
 
+            const scrollContainer = document.querySelector('main');
+
+            if (element && scrollContainer) {
+                const containerRect = scrollContainer.getBoundingClientRect();
+                const elementRect = element.getBoundingClientRect();
+                
+                const offsetPosition = scrollContainer.scrollTop + (elementRect.top - containerRect.top) - 80;
+
+                scrollContainer.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+
+        window.history.replaceState({}, document.title);
     }
-    if(location.pathname === '/dashboard'){
 
-      setDashboard(true)
-      document.body.style.backgroundColor = '#131314';
-
-    }
-
-  }, [location]);
-
-
-  useEffect (() => {
-
-    setOnUnauthorized(() => {
-      
-      setIsLogedIn(false);
     
-    });
-
-    const loginToken = localStorage.getItem('IsLogedin')
-
-    if(loginToken){
-
-      const checkAuth = async () => {
-      try {
-
-          const res = await api.post('/auth/refresh');
-
-          setAccessToken(res.data.accessToken);
-
-         setIsLogedIn(true);
 
 
+    
 
-      } catch (err) {
+  }, [loc])
 
-          console.log(err)
-          setIsLogedIn(false);
-          
+  useLayoutEffect(() => {
 
-        }
-      };
+    if (loc.pathname === '/dashboard') {
+
+      setIsVisibleNav(false);
+
+      document.body.classList.add('dash-bg')
+  
+    } else {
       
-      checkAuth();
-
+      document.body.classList.remove('dash-bg')
+      setIsVisibleNav(true);
+      
     }
 
-    if(location.pathname === '/' && isLogedIn){
-
-      navigate('/dashboard')
-
-    }
-
-  }, [])
+  }, [loc])
 
   useEffect(() => {
+      const verifyAuth = async () => {
 
-    const handleClickOutside = (event) => {
+          if (isLogedIn) {
+        
+            return;
 
-      if (cardRef.current && !cardRef.current.contains(event.target)) {
-        setIsOpen(false); 
-      }
-    };
+          }
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+          try {
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+            const res = await api.post('/auth/refresh');
+              
+            setAccessToken(res.data.accessToken);
 
-  const scroll = (id) =>{
+            setIsLogedIn(true);
 
-     setTimeout(() => {
-         const element = document.getElementById(id);
-         if (element) {
-             element.scrollIntoView({ behavior: 'smooth' });
-         }
-     }, 100);
+          } catch (err) {
+   
+            setIsLogedIn(false);
 
-  }
+            console.log(err)
+
+          } 
+      };
+
+      void verifyAuth();
+
+  }, []);
 
 return (
   <div className='screen'>
-    {!dashboard && (
-        <div className='navBar'>
-          <div className='navMain'>
-            <div className='mainnavunder'>
-              <Link to='/' className='logoB'>
-                <img src={ai} className='navLogo' alt='logo'/>
-              </Link>
-              <p>Claudify</p>
-            </div>
-            <Link to='/dashboard' onClick={() => setDashboard(true)} className='textButton'>Workspace</Link>
-          </div>
-          <div className='navLinks'>
-            <a 
-              href='#features' 
-              onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/');
-                  scroll("features");
-              }} 
-              className='textButton invisiblebutton'
-          >
-                        Features
-          </a>
-           <a 
-              href='#subscriptions' 
-              onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/');
-                  scroll('subscriptions');
-              }} 
-              className='textButton invisiblebutton'
-          >
-            Subscriptions
-          </a>
-          <a 
-              href='#subscriptions' 
-              onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/');
-                  scroll('faq');
-              }} 
-              className='textButton invisiblebutton'
-          >
-            FAQ
-          </a>
-            {!isLogedIn && (
-                <button type='button' href='login' className='textButton relativebutton' onClick={() => setIsOpen(!isOpen)}>Login</button>
-            )}
-            {isLogedIn && (
-              
-                <div>
-                  <button  type='button' href='login' className='textButton relativebutton' onClick={() => setIsOpen(!isOpen)}><img src={profil} className='navLogo' alt='logo'/></button>
-                  {isOpen && <Shield setIsOpen={setIsOpen}><ProfilCard setIsLogedIn={setIsLogedIn} ref={cardRef} setCardVisibility={setIsOpen}/></Shield>}
-                </div>
-            ) }
-            {isOpen && !isLogedIn && <LoginCard ref={cardRef} setCardVisibility={setIsOpen} setIsLogedIn={setIsLogedIn}/>}
-          </div>
-        </div>)}
+
+      {isVisibleNav && (
+        
+        <NavBar/>
+
+      )}
+
+
       <div id="mainPage" className='mainPage'>
         <Routes>
 
-            <Route path="/" element={<Main isLogedIn={isLogedIn}/>} />
-            <Route path="/about" element={<About />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/payment" element={<Shield setIsOpen={setIsOpen} setIsLogedIn={setIsLogedIn}><Payment /></Shield>} />
-            <Route path="/loginpage" element={<LoginPage setIsLogedIn={setIsLogedIn} setDashboard={setDashboard} />} />
-            <Route path="/registerpage" element={<RegisterPage setIsLogedIn={setIsLogedIn} />} />
-            <Route path="/forgotpage" element={<ForgotPage />} />
-            <Route path="/profedit" element={<Shield setIsOpen={setIsOpen} setIsLogedIn={setIsLogedIn} ><EditProfilePage  setIsLogedIn={setIsLogedIn}/></Shield>} />
-            <Route path="/authpage" element={<Shield setIsOpen={setIsOpen} setIsLogedIn={setIsLogedIn} ><Auth /></Shield>} />
-            <Route path="/reset-password" element={<ResetPage />} />
-            <Route path="/dashboard" element={<Dashboard setDashBoard={setDashboard} setIsLogedIn={setIsLogedIn} />} />
+          <Route path="/" element={<Main/>} />
+          <Route path="/about" element={<About />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/payment" element={<Shield><Payment /></Shield>} />
+          <Route path="/loginpage" element={<LoginPage />} />
+          <Route path="/registerpage" element={<RegisterPage  />} />
+          <Route path="/forgotpage" element={<ForgotPage />} />
+          <Route path="/profedit" element={<Shield><EditProfilePage/></Shield>} />
+          <Route path="/authpage" element={<Shield><Auth /></Shield>} />
+          <Route path="/reset-password" element={<ResetPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
 
         </Routes>
       </div>
@@ -281,7 +149,6 @@ function Main(){
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const supportRef = useRef(null);
 
-  // Kívülre kattintás figyelése a support kártya bezárásához
   useEffect(() => {
     function handleClickOutside(event) {
       if (supportRef.current && !supportRef.current.contains(event.target)) {
@@ -404,7 +271,9 @@ function Main(){
           
           ))}
         </div>)}
-        {(!subscriptions && isLoading)  && (<p>Error</p>)}
+        {(isLoading)  && (
+          <LoadingSpinner/>
+        )}
         <p className='desc plan'>Every plan includes all features from the lower-tier plans, plus additional benefits.</p>
       </section>
 
@@ -483,7 +352,7 @@ function SubCards( {title, price, desc, data} ) {
 
   const handlePruchase = (title, price) =>{
 
-    navigate('/payment', { state: { plan: title, price: price } });
+    void navigate('/payment', { state: { plan: title, price: price } });
 
   }
 

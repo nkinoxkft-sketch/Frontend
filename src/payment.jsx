@@ -1,5 +1,5 @@
 import { React, useState } from 'react';
-import './profil.css';
+
 import { useLocation } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 import './payment.css';
@@ -105,150 +105,143 @@ export const Payment = () => {
 
     return (
 
-        <div className='pagemid'>
+        <div className="cpay-page-container">
 
+            {/* Töltőképernyő (Overlay) */}
             {polling && (
-
-                <div className="loading-overlay">
-                    <div className="spinner"></div>
-                    <h2 className="loading-title">Finalizing Payment...</h2>
-                    <p className="loading-subtitle">Please do not close this page!</p>
+                <div className="cpay-loading-overlay">
+                    <div className="cpay-spinner"></div>
+                    <h2 className="cpay-loading-title">Finalizing Payment...</h2>
+                    <p className="cpay-loading-subtitle">Please do not close this page!</p>
                 </div>
-
             )}
 
-
-            <div className='s2'>
-                 <div className='top'>
-                    <div className='cost'>
-                        <p className='title'>Cost:</p>
-                        <p className='title mini'>{price} USD</p>
+            <div className="cpay-card">
+                
+                {/* Ár és Csomag Szekció */}
+                <div className="cpay-section">
+                    <div className="cpay-cost-row">
+                        <p className="cpay-title">Cost:</p>
+                        <p className="cpay-price-tag">{price} USD</p>
                     </div>                                
-                    <p className='desc'>Plan: {plan} </p>
+                    <p className="cpay-desc"><strong>Plan:</strong> {plan}</p>
                 </div> 
-                <div className='top'>
-                    <div className='cost'>
-                        <p className='title'>Prucchase Informations</p>
-                    </div>                                
-                    <p className='desc'>Immediate Activation: Your new plan will start immediately after a successful payment, giving you instant access to all upgraded features.</p>
-                    <p className='desc'>Full Price Charged: The system will charge the full price of the higher-tier package right away (not just the price difference between the two plans).</p>
-                    <p className='desc'>New Billing Cycle: The day you upgrade will become your new billing date. Future subscription renewals will be automatically charged based on this new date.</p>
+
+                {/* Vásárlási Információk Szekció */}
+                <div className="cpay-section">
+                    <h3 className="cpay-section-title">Purchase Information</h3>                               
+                    <ul className="cpay-info-list">
+                        <li className="cpay-desc"><strong>Immediate Activation:</strong> Your new plan will start immediately after a successful payment, giving you instant access to all upgraded features.</li>
+                        <li className="cpay-desc"><strong>Full Price Charged:</strong> The system will charge the full price of the higher-tier package right away (not just the price difference between the two plans).</li>
+                        <li className="cpay-desc"><strong>New Billing Cycle:</strong> The day you upgrade will become your new billing date. Future subscription renewals will be automatically charged based on this new date.</li>
+                    </ul>
                 </div>  
-                <div className='top'>
-                    <form>
-                        <div className='accept iscomp'>
-                            
+
+                {/* Céges adatok Szekció */}
+                <div className="cpay-section">
+                    <form className="cpay-form">
+                        <div className="cpay-checkbox-group">
                             <input
-                                id='comp'
+                                id="comp"
                                 type="checkbox"
-                                className='comp'
+                                className="cpay-checkbox"
                                 {...register('isCompany')}
                             />
-                            <label htmlFor='comp' className='labeltitle'>Company?</label>
+                            <label htmlFor="comp" className="cpay-checkbox-label">Purchasing as a Company?</label>
                         </div>
                     </form> 
+                    
                     {isCompany && (
-                        <div>
-                            <div className='label'>
-                                <label htmlFor='cname'>Company name</label>
+                        <div className="cpay-company-fields">
+                            <div className="cpay-field-group">
+                                <label htmlFor="cname" className="cpay-label">Company name</label>
                                 <input
-                                    className='input'
-                                    id='cname'
+                                    className="cpay-input"
+                                    id="cname"
                                     type="text"
+                                    placeholder="e.g. Claudify Inc."
                                     {...register('cname')}
                                 />
-                                {errors.cname && <span className="errortext">{errors.cname.message}</span>}
+                                {errors.cname && <span className="cpay-error-text">{errors.cname.message}</span>}
                             </div>
 
-                            <div className='label'>
-                                <label htmlFor='tax'>Vat Number</label>
+                            <div className="cpay-field-group">
+                                <label htmlFor="tax" className="cpay-label">VAT Number</label>
                                 <input
-                                    className='input'
-                                    id='tax'
+                                    className="cpay-input"
+                                    id="tax"
                                     type="text"
                                     placeholder="US12345678"
                                     {...register('tax')}
                                 />
-                                {errors.tax && <span className="errortext">{errors.tax.message}</span>}
+                                {errors.tax && <span className="cpay-error-text">{errors.tax.message}</span>}
                             </div>
                         </div> 
                     )}
                 </div>
-                <div className='top accept'>
-                    <input
-                        type="checkbox"
-                        id="privacy-terms"
-                        checked={acceptedTerms}
-                        onChange={(e) => setAcceptedTerms(e.target.checked)}
-                        required
-                        
-                    />
-                    <label htmlFor="privacy-terms" className='labeltitle    ' >
-                       I accept the <a href="/privacy" target="_blank" className="text-blue-600 underline">Privacy Policy</a>.
-                    </label>
-                </div> 
-                {paypall && (
-       
-                    <PayPalScriptProvider options={initialOptions}>
-                        <div style={{ 
-                                        pointerEvents: isFormValid ? 'auto' : 'none', 
-                                        opacity: isFormValid ? 1 : 0.5,
 
-                                    }}>
-                            <PayPalButtons 
-                                
-                                style={{ layout: "vertical" }}
-                                createSubscription={async (data, actions) => {
-                                  
-                                    try{
+                {/* Adatvédelmi nyilatkozat és Fizetés Szekció */}
+                <div className="cpay-section cpay-no-border">
+                    <div className="cpay-checkbox-group cpay-privacy-group">
+                        <input
+                            type="checkbox"
+                            id="privacy-terms"
+                            className="cpay-checkbox"
+                            checked={acceptedTerms}
+                            onChange={(e) => setAcceptedTerms(e.target.checked)}
+                            required
+                        />
+                        <label htmlFor="privacy-terms" className="cpay-checkbox-label">
+                            I accept the <a href="/privacy" target="_blank" rel="noreferrer" className="cpay-link">Privacy Policy</a>.
+                        </label>
+                    </div> 
 
-                                        const response = await api.post('/create-subscription', 
-                                        {
-                                            plan: plan,
-                                            name: getValues('cname'),
-                                            vat: getValues('tax')
-
-                                        },);
-
-                                        return response.data.subscriptionID;
-
-                                    }catch(err){
-                                        
-                                        const serverError = err.response.data.error;
-                                        setError("tax", {
-                                            type: "server",
-                                            message: serverError
-                                        });
-
-                                    }
-                                    
+                    {paypall && (
+                        <PayPalScriptProvider options={initialOptions}>
+                            <div 
+                                className="cpay-paypal-wrapper"
+                                style={{ 
+                                    pointerEvents: isFormValid ? 'auto' : 'none', 
+                                    opacity: isFormValid ? 1 : 0.5,
                                 }}
-                                onApprove={async (data, actions) => {
-                                    
-                                    startPolling()
-                                }}
-                                onError={(err) => {
-                                    console.error("PayPal error:", err);
-
-                                }}
-                                onCancel={async (data) => {
-                                    try {
-                                        // Szólunk a Node.js backendnek, hogy a user megszakította a fizetést, 
-                                        // így feloldhatja a 30 perces PENDING zárolást az adatbázisban.
-                                        await api.post('/paypal-cancel-purchase');
-                                        
-                                        console.log("A vásárlást megszakították.");
-                                        // Ide tehetsz egy értesítést a usernek, pl: 
-                                        // toast.info("Fizetés megszakítva. Bármikor újrapróbálhatod.");
-                                        
-                                    } catch (err) {
-                                        console.error("Hiba a megszakítás feldolgozásakor:", err);
-                                    }
-                                }}
-                            />
-                        </div>
-                    </PayPalScriptProvider>
-                )}
+                            >
+                                <PayPalButtons 
+                                    style={{ layout: "vertical" }}
+                                    createSubscription={async (data, actions) => {
+                                        try {
+                                            const response = await api.post('/create-subscription', {
+                                                plan: plan,
+                                                name: getValues('cname'),
+                                                vat: getValues('tax')
+                                            });
+                                            return response.data.subscriptionID;
+                                        } catch (err) {
+                                            const serverError = err.response?.data?.error || "Error occurred";
+                                            setError("tax", {
+                                                type: "server",
+                                                message: serverError
+                                            });
+                                        }
+                                    }}
+                                    onApprove={async (data, actions) => {
+                                        startPolling();
+                                    }}
+                                    onError={(err) => {
+                                        console.error("PayPal error:", err);
+                                    }}
+                                    onCancel={async (data) => {
+                                        try {
+                                            await api.post('/paypal-cancel-purchase');
+                                            console.log("A vásárlást megszakították.");
+                                        } catch (err) {
+                                            console.error("Hiba a megszakítás feldolgozásakor:", err);
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </PayPalScriptProvider>
+                    )}
+                </div>
             </div>
         </div>
 

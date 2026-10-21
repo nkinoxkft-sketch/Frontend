@@ -10,15 +10,20 @@ const queryClient = new QueryClient();
 
 import { createContext, useState, useContext, useEffect } from 'react';
 import { setOnUnauthorized } from './interceptor.jsx'
-
+import { useMemo } from 'react'
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
 
     const [isLogedIn, setIsLogedIn] = useState(false);
 
+    const value = useMemo(() => ({
+        isLogedIn,
+        setIsLogedIn
+    }), [isLogedIn]);
+
     return (
-        <AuthContext.Provider value={{ isLogedIn, setIsLogedIn }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );

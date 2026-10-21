@@ -12,6 +12,8 @@ export function useSub() {
 
     const { isLogedIn } = useAuth()
 
+    //console.log(isLogedIn)
+
     const { data, error, isLoading } = useQuery({
 
         queryKey: ['subData'],
@@ -30,30 +32,18 @@ export function useSub() {
 
     const targetDateStr = sub.expiry || ''
 
-    const dateString = String(targetDateStr);
-    const year = Number.parseInt(dateString.substring(0, 4), 10);
-    const month = Number.parseInt(dateString.substring(4, 6), 10) - 1;
-    const day = Number.parseInt(dateString.substring(6, 8), 10);
+    const expiryDate = new Date(Number(targetDateStr));
+    const now = new Date();
 
-    const targetDate = new Date(year, month, day);
+    const diffTime = expiryDate.getTime() - now.getTime();
 
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const diffTime = targetDate - today;
-
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    sub.expiry = diffDays;
-
-    const year1 = dateString.substring(0, 4);
-    const month1 = dateString.substring(4, 6);
-    const day1 = dateString.substring(6, 8);
+    const year1 = expiryDate.getFullYear();
+    const month1 = String(expiryDate.getMonth() + 1).padStart(2, '0'); // +1 mert a hónapok 0-tól indulnak
+    const day1 = String(expiryDate.getDate()).padStart(2, '0');
 
     const expiryDatestring = `${year1}.${month1}.${day1}`;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    //console.log(diffDays)
 
-    console.log('asdasd')
-
-    return { sub, error, isLoading, expiryDatestring };
+    return { sub, error, isLoading, expiryDatestring, diffDays };
 }

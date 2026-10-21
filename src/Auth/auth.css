@@ -1,0 +1,355 @@
+:root {
+    --bg-paper: #F3F4F6; /* Meleg törtfehér */
+    --bg-card: #ffffff;
+    --box-shadow: rgba(0, 0, 0, 0.05);
+    --text-color: #1a1a1a;
+
+}
+
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: left;
+  min-height: 100vh;
+  padding: 24px 16px;
+  background-color: var(--bg-paper);
+  font-family: inherit;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--box-shadow);
+}
+
+.auth-card-abs{
+    top: 90%;
+    right: 0;
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-card);
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--box-shadow);
+}
+
+@media (max-width: 494px) {
+  .auth-card-abs {
+    right: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .auth-card-abs {
+    width: 360px;    
+
+  }
+}
+
+.auth-header {
+  margin-bottom: 24px;
+}
+
+.auth-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #111111;
+  box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.1);
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input {
+  padding-right: 60px; /* Hely a Show/Hide gombnak */
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #555555;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.password-toggle-btn:hover {
+  color: #111111;
+}
+
+.error-message {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 2px;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #1a1a1a;
+  color: var(--bg-card);
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+.auth-submit-btn:hover {
+  background-color: #333333;
+}
+
+.auth-submit-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.cloudflare-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.auth-divider span {
+  padding: 0 12px;
+}
+
+.auth-social {
+  display: flex;
+  flex-direction: column;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px;
+  background-color: var(--bg-card);
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.social-btn:hover {
+  background-color: #f9fafb;
+}
+
+.auth-footer {
+  max-width: 420px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.auth-terms {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.auth-card-actions {
+  margin-top: 12px;
+}
+
+.auth-secondary-btn {
+  display: block;
+  width: 100%;
+  padding: 11px;
+  background-color: #111111;
+  color: var(--bg-card);
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+}
+
+.auth-secondary-btn:hover {
+  background-color: #333333;
+}
+
+.auth-footer-text {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.auth-footer-text p {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 8px;
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+
+.auth-success-box {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+}
+
+.auth-success-text {
+  font-size: 13px;
+  color: #16a34a;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Ha a .auth-page, .auth-card, .form-group, stb. már létezik a regisztrációs CSS-ben, akkor ezeket csak egészítsd ki: */
+
+.auth-forgot-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -4px;
+  margin-bottom: 4px;
+}
+
+.auth-forgot-link {
+  font-size: 13px;
+  color: #4b5563;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-forgot-link:hover {
+  text-decoration: underline;
+  color: #111;
+}
+
+.auth-global-error {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: var(--bg-card);
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.google-icon-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.auth-register-prompt {
+  margin-top: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-register-text {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.auth-register-link-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #f3f4f6;
+  color: #111111;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+}
+
+.auth-register-link-btn:hover {
+  background-color: #e5e7eb;
+}
+

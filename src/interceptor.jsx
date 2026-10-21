@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
 export const api = axios.create({
-  baseURL: '/api', 
+  baseURL: apiUrl, 
   withCredentials: true 
 });
 
@@ -48,8 +50,10 @@ api.interceptors.response.use(
       originalRequest._retry = true; 
 
       try {
-  
-        const response = await axios.post('/api/auth/refresh', {}, {
+        
+        const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
+        const response = await axios.post(`${apiUrl}/auth/refresh`, {}, {
           withCredentials: true 
         });
 

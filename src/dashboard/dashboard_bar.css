@@ -1,0 +1,238 @@
+  /* =========================================
+    Sidebar / Navigation (Claudify Design)
+    Előtag: csb-
+    ========================================= */
+
+  .csb-container {
+    display: flex;
+    height: 100vh; /* Teljes képernyő magasság */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Maga az oldalsáv */
+  .csb-sidebar {
+    width: 260px;
+    background-color: #F1F5F9;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+  }
+
+  /* Felső blokk */
+  .csb-top {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .csb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .csb-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .csb-logo-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .csb-logo-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+  }
+
+  .csb-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+  }
+
+  /* Ikonok (Bezárás, Nyitás) */
+  .csb-close-btn,
+  .csb-open-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+  }
+
+  .csb-close-btn:hover,
+  .csb-open-btn:hover {
+    background-color: #e5e7eb;
+  }
+
+  .csb-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+  }
+
+  .csb-close-btn:hover .csb-icon,
+  .csb-open-btn:hover .csb-icon {
+    opacity: 1;
+  }
+
+  /* Új Chat gomb */
+  .csb-new-chat-btn {
+    width: 100%;
+    padding: 10px 14px;
+    background-color: #ffffff;
+    color: #111827;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+
+  .csb-new-chat-btn:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+  }
+
+  .csb-section-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    margin: 8px 0 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Középső, görgethető rész */
+  .csb-mid {
+    flex: 1; /* Kitölti a maradék helyet */
+    overflow-y: auto;
+    padding: 0 12px;
+  }
+
+  /* Görgetősáv formázása (opcionális, de elegánsabb) */
+  .csb-mid::-webkit-scrollbar {
+    width: 4px;
+  }
+  .csb-mid::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 4px;
+  }
+
+  .csb-sessions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .csb-session-btn {
+    width: 100%;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #374151;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .csb-session-btn:hover {
+    background-color: #e5e7eb;
+  }
+
+  .csb-session-active {
+    background-color: #ffffff;
+    color: #111827;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+  }
+
+  /* Alsó blokk */
+  .csb-bottom {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .csb-profile-section {
+    position: relative; /* Ez fontos a Profilkártya pozicionálásához! */
+  }
+
+  .csb-profile-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    display: block;
+  }
+
+  .csb-profile-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+  }
+
+  .csb-profile-btn:hover .csb-profile-img {
+    transform: scale(1.05);
+  }
+
+  .csb-profile-popup {
+
+    position: absolute;
+    z-index: 1000;
+    bottom: 1000%;
+    right: -30%;
+  }
+
+  .csb-credits {
+    padding-left: 4px;
+  }
+
+  .csb-credits-text {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .csb-credits-text strong {
+    color: #111827;
+  }
+
+  /* Becsukott állapot */
+  .csb-open-container {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 50;
+  }

@@ -1,0 +1,18 @@
+.navBar{
+    
+    display: flex;
+    flex-direction: row;
+    border-bottom: #c5c4c2 1px solid;
+    justify-content: space-between;
+    padding: 1rem;
+    flex-wrap: wrap;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    position: relative;
+    top: 0;
+  
+    width: 100%;
+    background-color: var(--bg-paper);
+
+
+}

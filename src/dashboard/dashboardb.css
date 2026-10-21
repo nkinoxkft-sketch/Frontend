@@ -1,0 +1,252 @@
+/* =========================================
+   Dashboard / Main Chat Area (Gemini Dark Style)
+   Előtag: cdash-
+   ========================================= */
+
+.cdash-screen {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #131314; /* Mély éjszakai háttér (Gemini stílus) */
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #e3e3e3; /* Általános világos szövegszín */
+}
+
+.cdash-main-workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Üzenetek területe */
+.cdash-chat-history {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  scroll-behavior: smooth;
+}
+
+/* Görgetősáv formázása (sötét módhoz) */
+.cdash-chat-history::-webkit-scrollbar {
+  width: 6px;
+}
+.cdash-chat-history::-webkit-scrollbar-thumb {
+  background-color: #444746;
+  border-radius: 6px;
+}
+.cdash-chat-history::-webkit-scrollbar-thumb:hover {
+  background-color: #5f6368;
+}
+.cdash-chat-history::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Gondolkodás (Loading) indikátor */
+.cdash-loading-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.cdash-loading-bubble {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #1e1f20; /* Sötét kártya háttér */
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid #444746; /* Finom keret */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: fit-content;
+}
+
+.cdash-spinner {
+  width: 20px;
+  height: 20px;
+  color: #e3e3e3; /* Világos pörgő */
+  animation: cdash-spin 1.2s linear infinite;
+}
+
+@keyframes cdash-spin {
+  to { transform: rotate(360deg); }
+}
+
+.cdash-loading-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #c4c7c5;
+  letter-spacing: 0.3px;
+}
+
+/* Szövegbeviteli terület (Alul) */
+.cdash-input-area {
+  padding: 0 24px 24px 24px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cdash-input-area > * {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* =========================================
+   Chat Message Bubbles (Gemini Dark Style)
+   Előtag: cmsg-
+   ========================================= */
+
+.cmsg-row {
+  display: flex;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.cmsg-row-user {
+  justify-content: flex-end;
+}
+
+.cmsg-row-claude {
+  justify-content: flex-start;
+}
+
+.cmsg-bubble {
+  max-width: 85%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Felhasználó buborékja (Lágy, de észrevehető kontraszt) */
+.cmsg-bubble-user {
+  background-color: #333537; /* Kicsit világosabb a háttérnél */
+  color: #e3e3e3;
+  padding: 14px 18px;
+  border-radius: 16px 16px 4px 16px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Claude buborékja (Visszafogott, tiszta sötétszürke kártya) */
+.cmsg-bubble-claude {
+  background-color: #1e1f20; /* Jól elkülönül a #131314 háttértől */
+  color: #e3e3e3;
+  padding: 20px 24px;
+  border-radius: 16px 16px 16px 4px;
+  border: 1px solid #444746; /* Elegáns szürke keret */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Csatolt fájlok konténere */
+.cmsg-attachments-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.cmsg-attachment-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #444746;
+  background-color: #1e1f20;
+  max-width: 250px;
+}
+
+/* Kép előnézet */
+.cmsg-image-link {
+  display: block;
+  position: relative;
+  text-decoration: none;
+}
+
+.cmsg-image-preview {
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+.cmsg-file-name-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(0, 0, 0, 0.75); /* Sötétebb áttetsző réteg */
+  color: #ffffff;
+  font-size: 11px;
+  padding: 6px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Dokumentum előnézet */
+.cmsg-doc-preview,
+.cmsg-doc-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.2s;
+}
+
+.cmsg-doc-preview:hover,
+.cmsg-doc-link:hover {
+  background-color: #333537; /* Finom világosodás hover-re */
+}
+
+.cmsg-doc-icon {
+  font-size: 24px;
+  color: #c4c7c5; /* Visszafogott ikon szín */
+}
+
+.cmsg-doc-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cmsg-doc-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e3e3e3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cmsg-doc-size {
+  font-size: 11px;
+  color: #8e918f; /* Halványabb szürke a másodlagos infónak */
+}
+
+/* Markdown Formázás */
+.cmsg-markdown-content p {
+  margin: 0 0 12px 0;
+}
+.cmsg-markdown-content p:last-child {
+  margin-bottom: 0;
+}
+.cmsg-markdown-content ul, 
+.cmsg-markdown-content ol {
+  margin-top: 0;
+  margin-bottom: 12px;
+  padding-left: 20px;
+}
+.cmsg-markdown-content li {
+  margin-bottom: 4px;
+}

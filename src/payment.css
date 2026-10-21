@@ -1,254 +1,218 @@
+/* =========================================
+   Payment / Checkout (Claudify Design)
+   Előtag: cpay-
+   ========================================= */
 
-:root {
-  --bg-paper: #eee8d5; /* Meleg törtfehér */
-  --text-main: #1C1B1A; /* Majdnem fekete */
-  --text-muted: #5C5B5A; /* Sötétszürke */
-  
-  --accent-color: #D97757;
-  --border-color: #c5c4c2;
-  
-  --font-serif: 'Georgia', 'Times New Roman', serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+.cpay-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  position: relative;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-
-.pagemid{
-
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-/* Az overlay ami letakarja az oldalt */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+.cpay-card {
+  background: #ffffff;
   width: 100%;
-  height: 100%;
-  /* A dizájnhoz illeszkedő törtfehér/bézs háttérszín[cite: 3] */
-  background-color: #f2ebd9; 
+  max-width: 500px;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f3f4f6;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Szekciók és elválasztók */
+.cpay-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cpay-no-border {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* Ár és Címsorok */
+.cpay-cost-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cpay-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.cpay-price-tag {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.cpay-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+/* Szövegek és Listák */
+.cpay-desc {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.cpay-info-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cpay-info-list li {
+  color: #4b5563;
+}
+
+/* Űrlap Elemek (Checkbox, Input) */
+.cpay-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cpay-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #1a1a1a; /* Fekete checkbox */
+  cursor: pointer;
+}
+
+.cpay-checkbox-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  margin: 0;
+}
+
+.cpay-link {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.cpay-link:hover {
+  text-decoration: underline;
+}
+
+.cpay-company-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+  padding: 16px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.cpay-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cpay-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.cpay-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #111827;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.cpay-input:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+}
+
+.cpay-error-text {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 2px;
+}
+
+/* PayPal Szekció */
+.cpay-privacy-group {
+  margin-bottom: 20px;
+}
+
+.cpay-paypal-wrapper {
+  margin-top: 10px;
+  transition: opacity 0.3s ease;
+}
+
+/* Loading Overlay */
+.cpay-loading-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 50;
+  border-radius: 12px;
 }
 
-/* Elegáns, minimalista betöltő animáció, ami a sötét gombokhoz igazodik[cite: 3] */
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 3px solid rgba(34, 34, 34, 0.1);
-  border-top-color: #1a1a1a; 
+.cpay-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #1a1a1a;
   border-radius: 50%;
-  animation: spin 1s ease-in-out infinite;
-  margin-bottom: 24px;
+  animation: cpay-spin 1s linear infinite;
+  margin-bottom: 16px;
 }
 
-/* A főcímhez (Access Claude...) használt klasszikus talpas (serif) stílus[cite: 3] */
-.loading-title {
-  font-family: "Georgia", "Times New Roman", serif;
-  color: #1a1a1a;
-  font-size: 2.2rem;
-  font-weight: 400;
-  margin: 0 0 12px 0;
-  letter-spacing: 0.5px;
-}
-
-/* Az alcímhez (Affordable Claude API Access) használt terrakotta/narancsos szín[cite: 3] */
-.loading-subtitle {
-  font-family: system-ui, -apple-system, sans-serif;
-  color: #c97a63; 
-  font-size: 1.1rem;
-  margin: 0;
-  font-weight: 400;
-}
-
-@keyframes spin {
+@keyframes cpay-spin {
   to { transform: rotate(360deg); }
 }
 
-.poptions{
-
-    display: flex;
-    justify-content: space-between;
-    border-bottom: none;
-    color: #5C5B5A;
+.cpay-loading-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
 }
 
-.insidep{
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-
+.cpay-loading-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
 }
-
-.paybutton{
-
-    width: 100%;
-    border: 1px solid #eee8d5;
-    background-color: white;
-    padding: 1rem;
-    border-bottom: none;
-    border-radius: 0px;
-}
-
-.blast{
-    border-bottom: 1px solid #eee8d5;
-}
-
-.debit{
-    max-width: 20px;
-}
-
-.paypall{
-    height: 20px;
-}
-.pagemid{
-
-    gap:2rem
-}
-
-.s2{
-
-    border: solid 1px #c5c4c2;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    padding: 2rem;
-    margin-top: 2rem;
-    background-color: white;
-    margin-bottom: 2rem;
-    display: flex;
-    flex-direction: column;
-    height: fit-content;
-    width: 400px;
-    
-
-}
-
-.paypalldiv{
-
-    width: 300px;
-}
-
-
-
-.cost{
-    display: flex;
-    gap: 4rem;
-    justify-content: space-between;
-}
-
-.top{
-
-    padding: 0px;
-    border-bottom: 1px solid #eee8d5;
-    margin-bottom: 1rem;
-    width: 100%;
-}
-
-.spay{
-
-    border: solid 1px #c5c4c2;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    padding: 2rem;
-    margin-top: 2rem;
-    background-color: white;
-    margin-bottom: 2rem;
-    display: flex;
-    flex-direction: column;
-    height: fit-content;
-    width: 400px;
-}
-.b{
-    color: #FAF9F6;
-    background-color: #1C1B1A;
-    font-family: var(--font-sans);
-    font-size: 0.8rem;
-    border: 0px;
-    padding: 0.5rem;
-    border-radius: 0.2rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 100%;
-}
-
-.debits{
-
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 1rem;
-}
-.cardnum{
-
-    display: flex;
-    flex-direction: column;
-    
-
-}
-
-.labeltitle{
-
-    display: flex;
-    flex-direction: row;
-    white-space: nowrap;
-
-}
-
-.pinput{
-
-    width: 100%;
-}
-
-.moreinrow{
-
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-}
-
-.cvv{
-
-    width: 100%;
-
-}
-
-.changeplantitle{
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.changep{
-
-    font-size: 0.9rem;
-}
-
-.changetitlenomar{
-  
-
-    font-family: var(--font-sans);
-    font-size: 1.2rem;
-    font-weight: 500;
-
-    color: #1C1B1A;
-
-}
-.accept{
-    display:  flex;
-    flex-direction: row;
-    gap: 1rem;
-    padding-bottom: 1rem;
-    align-items:  center;
-    text-align: center;
-}
-
-.iscomp{
-
-    gap: 1rem;
-}
-

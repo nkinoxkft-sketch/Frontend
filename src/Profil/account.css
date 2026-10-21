@@ -1,0 +1,156 @@
+/* =========================================
+   Account Settings (Claudify Design)
+   Előtag: cas-
+   ========================================= */
+
+.cas-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px; /* Hogy ne nyúljanak el a beviteli mezők túl szélesre */
+}
+
+.cas-error-global {
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Fejléc */
+.cas-header {
+  margin-bottom: 32px;
+}
+
+.cas-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 6px 0;
+}
+
+.cas-desc {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Űrlapok */
+.cas-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cas-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.cas-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cas-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.cas-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: #111827;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cas-input:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+}
+
+.cas-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Üzenetek (Siker / Hiba) */
+.cas-message-box {
+  min-height: 20px; /* Helyfoglaló, hogy ne ugráljon az elrendezés hiba esetén */
+}
+
+.cas-error-text {
+  display: block;
+  font-size: 13px;
+  color: #ef4444;
+  margin-top: 2px;
+}
+
+.cas-success-text {
+  display: block;
+  font-size: 13px;
+  color: #10b981;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Gombok */
+.cas-primary-btn {
+  padding: 12px 16px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: fit-content; /* Csak a szöveg szélességét veszi fel */
+  margin-top: 4px;
+}
+
+.cas-primary-btn:hover:not(:disabled) {
+  background-color: #000000;
+}
+
+.cas-primary-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Elválasztó */
+.cas-divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 0;
+  width: 100%;
+}
+
+/* Fiók törlése szekció */
+.cas-danger-zone {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px dashed #fca5a5;
+}
+
+.cas-danger-btn {
+  padding: 10px 16px;
+  background-color: #ffffff;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cas-danger-btn:hover {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+}
