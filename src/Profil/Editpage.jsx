@@ -28,7 +28,7 @@ export const EditProfilePage = () =>{
             </div>
             
             <div className="cset-content">
-                {state === 'acc' && <Shield><AccountSettings/></Shield>}
+                {state === 'acc' && ( <Shield className="acc-shield" ><AccountSettings className="acc-shield" /></Shield>)}
                 {state === 'sub' && <Shield><Sub/></Shield>}
             </div>
         </div>

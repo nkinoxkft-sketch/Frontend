@@ -59,9 +59,9 @@ export const NavBar = React.memo(function Navbar()  {
              <Link to='/' className='logoB'>
                <img src={ai} className='navLogo' alt='logo'/>
              </Link>
-             <p>Claudify</p>
+             <p>Cloudify</p>
            </div>
-           <Link to='/dashboard' className='textButton'>Workspace</Link>
+           <Link to='/dashboard' className='textButton'>Ai Chat</Link>
          </div>
          <div className='navLinks'>
            <a 

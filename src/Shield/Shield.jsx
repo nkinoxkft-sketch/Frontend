@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../main";
 
-export function Shield({ children }) {
+export function Shield({ children, className}) {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -12,6 +12,7 @@ export function Shield({ children }) {
     const { isLogedIn, setIsLogedIn } = useAuth(); 
 
     useEffect(() => {
+     
         const verifyAuth = async () => {
 
             if (isLogedIn) {
@@ -33,7 +34,9 @@ export function Shield({ children }) {
 
                 if (location.pathname !== '/loginpage' && location.pathname !== '/') {
 
+                    console.log('nav')
                     void navigate('/loginpage', { state: { from: location } });
+                    
 
                 }
 
@@ -55,6 +58,11 @@ export function Shield({ children }) {
 
     }
 
-    return children;
+    return (
+
+    <div className={`base-shield ${className || ''}`}>
+      {children}
+    </div>
+  );
 }
 

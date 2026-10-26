@@ -3,6 +3,9 @@
    Előtag: cdash-
    ========================================= */
 
+   /* 2. A chat előzmények görgetésének izolálása (Scroll Chaining blokkolása) */
+
+
 .cdash-screen {
   display: flex;
   height: 100vh;
@@ -28,6 +31,7 @@
   flex-direction: column;
   gap: 24px; /* Távolság az üzenetek között */
   scroll-behavior: smooth;
+  
 }
 
 /* Görgetősáv formázása (hogy illeszkedjen a dizájnhoz) */

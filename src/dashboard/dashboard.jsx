@@ -14,68 +14,42 @@ export const Dashboard = () =>{
   
   const { isLogedIn } = useAuth()
 
-  const current_session_id_ref = useRef(null);
-  const number_of_messages_loaded = useRef(5);
-  const new_tab = useRef(false);
-
   const [sessions, setSessions] = useState([])
   const [isLoadingSessions, setIsLoadingSessions] = useState(true);
 
+  const selected_session_id = useRef(null);
+  const limit = useRef(5);
+  const loading_prev_messages = useRef(false);
+
   const [responseText, setResponseText] = useState([]);
-  const [isLoadingResponseText, setIsLoadingResponseText] = useState(true);
+  const [isLoadingResponseText, setIsLoadingResponseText] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const contentRef = useRef(null);
+  const previousScrollHeightRef = useRef(null);
 
-  const isLoadingMoreMessageInSession = useRef(true);
+  const no_more_message_to_load = useRef(false);
 
-  const isGettinGettingMessagesInside = useRef(false)
-
-  const isChangedTab = useRef(true);
-
-  const selected_get_section = useRef(false);
-
-  const sent_message = useRef(false);
-
-  const isAutoScrolling = useRef(false);
-
-
-  const getMessages = async (new_session_id, load_previous) =>{
-
-    //console.log(new_session_id, current_session_id_ref.current)
-
-
-
+  const getMessages = async () =>{
     
-    if(new_session_id !== current_session_id_ref.current && !load_previous){
-
-      isChangedTab.current = true;
-
-    }
-    
-
+    console.log('getmessage')
     try{
 
+      if(isLoadingResponseText){ return }
       setIsLoadingResponseText(true);
-
-      current_session_id_ref.current = new_session_id;
-
-      console.log('getmessage limit', number_of_messages_loaded.current)
-
+      
       const response = await api.get('/getMessages', {
         params: { 
-          session_id: current_session_id_ref.current, 
-          limit: Number(number_of_messages_loaded.current),
+          session_id: selected_session_id.current, 
+          limit: Number(limit.current),
         },
 
       });
     
       const data =  response.data.messages;
 
-      console.log(data.length)
+      if(data.length < 5){
 
-      if(data.length < 10){
-
-        isLoadingMoreMessageInSession.current = false
+        no_more_message_to_load.current = true
 
       }
     
@@ -120,16 +94,15 @@ export const Dashboard = () =>{
         
 
       } 
-      if(load_previous){
+      console.log(loading_prev_messages.current, 'prev')
+      if(loading_prev_messages.current){
+
+        console.log('prev')
 
         setResponseText(prev => [...formattedMessages, ...prev]);
-   
+
       }
       else{
-        isGettinGettingMessagesInside.current = false;
-        isLoadingMoreMessageInSession.current = true;
-  
-
 
         setResponseText(formattedMessages);
 
@@ -144,6 +117,7 @@ export const Dashboard = () =>{
 
       setIsLoadingResponseText(false);
 
+
     }
     
   };
@@ -152,13 +126,14 @@ export const Dashboard = () =>{
 
     try{
 
+      setIsLoadingSessions(true);
+
       const response = await api.get('/getSessions');
 
       const data =  response.data.sessions;
 
       if(data){
 
-        //console.log('sessions', data)
         setSessions(data);
 
       }
@@ -178,95 +153,66 @@ export const Dashboard = () =>{
 
   useEffect(() => {
 
-    if(isLogedIn && !isLoading && new_tab.current){
-      console.log('session')
+    if(isLogedIn && !isLoadingResponseText){
+
       void getSessions();
 
+      console.log('getsession')
 
     }
-
-
-  }, [isLogedIn, isLoading])
-
-  useEffect(() => {
-
-    void getSessions();
 
   }, [isLogedIn])
 
-  function setNewTab(){
+  useLayoutEffect(() => {
 
-    new_tab.current = true;
-    current_session_id_ref.current = null;
-    isGettinGettingMessagesInside.current = false;
-    isLoadingMoreMessageInSession.current = true;
+    const container = contentRef.current;
 
-    setResponseText([]);
+    if (!container) return;
 
-  }
+    if(loading_prev_messages.current){
 
-  const contentRef = useRef(null);
-  const previousScrollHeightRef = useRef(0);
+      loading_prev_messages.current = false;
 
-  useEffect(() => {
+      const heightDifference = container.scrollHeight - previousScrollHeightRef.current;
 
-    const box = contentRef.current;
+      container.scrollTo({
+        top: heightDifference,
+        behavior: 'instant'
+      });
 
-    if(selected_get_section.current || sent_message.current ){
-      
-      box.scrollTop = box.scrollHeight;
 
-      selected_get_section.current = false;
+    }
+    else{
 
-      sent_message.current = false;
-
-      isAutoScrolling.current = true;
-
-      setTimeout(() => {
-        isAutoScrolling.current = false;
-      }, 50);
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: 'instant'
+      });
 
     }
 
-  }, [responseText])
-
-
-useLayoutEffect(() => {
-    const container = contentRef.current;
-    if (!container || previousScrollHeightRef.current === 0) return;
-
-    if (!selected_get_section.current && !sent_message.current) {
-        const heightDifference = container.scrollHeight - previousScrollHeightRef.current;
-        
-        // 1. Mentsük el az eredeti scroll stílust, majd kényszerítsük az azonnali ugrást
-        const originalScrollBehavior = container.style.scrollBehavior;
-        container.style.scrollBehavior = 'auto'; 
-
-        // 2. Beállítjuk a pozíciót (most már azonnal fog oda ugrani, animáció nélkül)
-        container.scrollTop = heightDifference;
-
-        // 3. Visszaadjuk a böngészőnek az irányítást (hogy a sima görgetés továbbra is működjön)
-        // Ezt érdemes egy requestAnimationFrame-be tenni, hogy a DOM frissítés után történjen
-        requestAnimationFrame(() => {
-            container.style.scrollBehavior = originalScrollBehavior;
-        });
-    }
-
-    previousScrollHeightRef.current = 0;
-}, [responseText]);
+    
+  }, [responseText]);
 
   useEffect(() => {
+
     const container = contentRef.current;
+
     if (!container) return; 
-    console.log(isLoadingResponseText)
 
     const handleScroll = () => {
-      
-      if (container.scrollTop <= 10 && !isLoadingResponseText && isLoadingMoreMessageInSession.current && !isAutoScrolling.current ) {
-        number_of_messages_loaded.current += 5;
-        isGettinGettingMessagesInside.current =true;
+      console.log(container.scrollTop, container.scrollHeight, loading_prev_messages.current, no_more_message_to_load.current)
+      if (container.scrollTop <= 10 && !no_more_message_to_load.current &&  !loading_prev_messages.current) {
+
+        limit.current += 5;
+
         previousScrollHeightRef.current = container.scrollHeight;
-        getMessages(current_session_id_ref.current, true);
+
+        loading_prev_messages.current = true;
+
+        console.log('loading', limit.current)
+
+        getMessages();
 
       }
 
@@ -284,12 +230,11 @@ useLayoutEffect(() => {
 
     container.addEventListener('scroll', handleScroll);
 
-    // Takarítás a komponens újrafutásakor vagy megszűnésekor
+
     return () => {
       container.removeEventListener('scroll', handleScroll);
     };
   }, [isLoadingResponseText]);
-
 
   return(
 
@@ -297,11 +242,11 @@ useLayoutEffect(() => {
 
     <Bar 
         sessions={sessions} 
-        current_session_id_ref={current_session_id_ref} 
-        setNewTab={setNewTab} 
-        number_of_messages_loaded={number_of_messages_loaded} 
+        selected_session_id={selected_session_id}
+        limit={limit}
         getMessages={getMessages} 
-        selected_get_section={selected_get_section}
+        no_more_message_to_load={no_more_message_to_load}
+
     />
 
     <div className="cdash-main-workspace">
@@ -312,7 +257,7 @@ useLayoutEffect(() => {
                 <ChatMessage key={index} msg={msg} />
             ))}
             
-            {isLoading && (
+            {isLoadingResponseText && (
                 <div className="cdash-loading-wrapper">
                     <div className="cdash-loading-bubble">
                         <svg 
@@ -335,15 +280,12 @@ useLayoutEffect(() => {
         {/* Szövegbeviteli mező (Ez került alulra) */}
         <div className="cdash-input-area">
             <Textarea 
-                current_session_id_ref={current_session_id_ref} 
-                number_of_messages_loaded={number_of_messages_loaded} 
-                new_tab={new_tab} 
-                isChangedTab={isChangedTab}
+                selected_session_id={selected_session_id} 
+                limit={limit} 
                 setResponseText={setResponseText} 
-                responseText={responseText} 
-                setIsLoading={setIsLoading} 
-                isLoading={isLoading}
-                sent_message={sent_message}
+                setIsLoading={setIsLoadingResponseText} 
+                isLoading={isLoadingResponseText}
+
             />
         </div>
 

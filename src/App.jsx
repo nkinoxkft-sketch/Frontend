@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { ResetPage } from './Auth/forgot';
-import {  Auth} from './Profil';
+import { Auth } from './Profil/Auth';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import {  Payment } from './payment';
 import { Dashboard } from './dashboard/dashboard';
@@ -168,10 +168,11 @@ function Main(){
             <p>Affordable Claude API Access</p>
           </div>
           <div className='largeTitle'>
-            <p>Access Claude Through Our Platform</p>
+            <p>The Ultimate Claude AI Experience.</p>
           </div>
           <div className='description'>
-            <p>Chat with Claude using our secure platform. Choose the subscription that fits your needs and start using one of the world's most capable AI assistants through our managed API service.</p>
+            <p>Unlock the full potential of advanced AI with our premium chat platform. Seamlessly manage your conversations, upload documents, and enjoy lightning-fast streaming responses in a professional workspace.
+Call-to-Action Choose Your Plan / Start Chatting</p>
           </div>
           <a href='#subscriptions' className='buttonBlack'>Buy subscription</a>
         </div>
@@ -181,26 +182,26 @@ function Main(){
         <div className='featureText'>
           <div>
             <div className='miniTitle'>
-              <p>Fast & Reliable</p>
+              <p>Rich Text & Code Support:</p>
             </div>
             <div className='description f'>
-              <p>Low latency responses powered by Claude API infrastructure.</p>
+              <p>Enjoy beautiful Markdown rendering and syntax-highlighted code blocks, making it perfect for developers and writers alike.</p>
             </div>
           </div>
           <div>
             <div className='miniTitle'>
-              <p>Affordable Pricing</p>
+              <p>Smart Context & History:</p>
             </div>
             <div className='description f'>
-              <p>Pay a fixed monthly subscription instead of managing API billing yourself.</p>
+              <p>Never lose an idea. Our intuitive sidebar automatically saves your sessions, allowing you to pick up any conversation right where you left off.</p>
             </div>
           </div>
           <div>
             <div className='miniTitle'>
-              <p>Secure Platform</p>
+              <p>Transparent Pricing:</p>
             </div>
             <div className='description f'>
-              <p>Your conversations are processed securely with a simple and intuitive interface.</p>
+              <p>No hidden fees. Pay securely via PayPal and keep track of your AI usage easily with our built-in credit system.</p>
             </div>
           </div>
         </div>
@@ -298,7 +299,7 @@ function Main(){
               <div className="c-support-email-box">
                 <span className="c-email-label">Direct email</span>
                 <a href="mailto:support@yourdomain.com" className="c-email-link">
-                  support@yourdomain.com
+                  nkinoxkft@gmail.com
                 </a>
               </div>
 

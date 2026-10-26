@@ -166,52 +166,51 @@ export const Auth = () =>{
     
     return(
 
-   <div className='Authpage'>
-        <div className='verifycard'>
-            <p className='title'>Check your email</p>
-            <p className='desc vd'>We've sent a verification code to your email address. Please enter it below.</p>
-            <form onSubmit={handleSubmit((data) => {sendCode(data)})} className="verify">
+    <div className="ca-page-container">
+        <div className="ca-auth-card">
+            <p className="ca-title">Check your email</p>
+            <p className="ca-description">We've sent a verification code to your email address. Please enter it below.</p>
+            <form onSubmit={handleSubmit((data) => {sendCode(data)})} className="ca-form">
                 <input 
-                    className='inputn'
+                    className="ca-input-code"
                     type="text"
                     maxLength={6}
                     inputMode="numeric" 
                     pattern="[0-9]*"
                     onKeyDown={(e) => {
-                        
                         if (e.ctrlKey || e.metaKey) {
                             return;
                         }
                         const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
-                            if (!/^[0-9]$/.test(e.key) && !allowedKeys.includes(e.key)) {
+                        if (!/^[0-9]$/.test(e.key) && !allowedKeys.includes(e.key)) {
                             e.preventDefault(); 
                         }
                     }}
                     {...register('auth')} 
-                    
                 />
-                <button disabled={isSubmitting} type="submit" className="button">Verify and Continue    </button>
+                <button disabled={isSubmitting} type="submit" className="ca-btn-primary">
+                    Verify and Continue    
+                </button>
                 {errors.auth && (
-                    <span className="errortext">{errors.auth.message}</span>
+                    <span className="ca-text-danger">{errors.auth.message}</span>
                 )}
             </form>
-        <div className='resend'>
-            <p className='title mini'>Didn't receive the code?</p>
-            <button 
-                onClick={resend} 
-                // A gomb inaktív, ha épp küldünk, VAGY ha még van vissza idő
-                disabled={isSending || secondsLeft > 0}
-                className={`resendb`}
+            
+            <div className="ca-resend-container">
+                <p className="ca-subtitle">Didn't receive the code?</p>
+                <button 
+                    onClick={resend} 
+                    disabled={isSending || secondsLeft > 0}
+                    className="ca-btn-secondary"
                 >
-                {isSending 
-                    ? 'Sending...' 
-                    : secondsLeft > 0 
-                    ? `Resend in (${secondsLeft}s)` 
-                    : 'Resend code'}
+                    {isSending 
+                        ? 'Sending...' 
+                        : secondsLeft > 0 
+                        ? `Resend in (${secondsLeft}s)` 
+                        : 'Resend code'}
                 </button>
+            </div>
         </div>
-        </div>
-       
     </div>
         
     )

@@ -23,7 +23,7 @@ const usernameSchema = z.object({
 })
 
 
-export const AccountSettings = () => {
+export const AccountSettings = ({ className}) => {
 
     const { user, error, isLoading } = useUser();
 
@@ -154,7 +154,7 @@ export const AccountSettings = () => {
     }
 
     return(
-        <div>
+        <div className={`acc-settings-page`} >
             {error && <p className="cas-error-global">Unexpected error</p>}
 
             {!error && !isLoading && (

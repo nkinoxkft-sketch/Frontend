@@ -25,7 +25,7 @@ const uploadToR2 = async (file, file_data) =>{
 
 
 }
-export const Textarea = ( { new_tab, isChangedTab, isLoading, setIsLoading, current_session_id_ref, setResponseText, number_of_messages_loaded, sent_message}) =>{
+export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setResponseText, limit }) =>{
 
     const { user } = useUser();
     const { sub } = useSub();
@@ -166,8 +166,13 @@ export const Textarea = ( { new_tab, isChangedTab, isLoading, setIsLoading, curr
         if (e.key === 'Enter' && !e.shiftKey) {
 
             e.preventDefault(); 
-        
-            handleSend();
+            
+            if(content !== '' || files.length > 0){
+
+                void handleSend();
+
+            }
+
         }
 
     };
@@ -212,216 +217,133 @@ export const Textarea = ( { new_tab, isChangedTab, isLoading, setIsLoading, curr
     const abortControllerRef = useRef(null);
 
     const handleSend = async () => {
+        if (isLoading) return;
 
-        //console.log(new_tab.current)
-        
+        const messageText = textareaRef.current?.textContent?.trim() || "";
 
-        if(isLoading){
+        if (!messageText && files.length === 0) return;
 
-            return
-
-        }
-
-        setIsLoading(true)
-
-        isChangedTab.current = false
+        setIsLoading(true);
 
         abortControllerRef.current = new AbortController();
 
-        const messageText = textareaRef.current.textContent.trim();
-      
-        if (messageText.trim() || files.length !== 0) {
+        try {
+            // 1. Fájlok statisztikájának kigyűjtése és feltöltése R2-be
+            let keys = [];
+            if (files.length > 0) {
+                const fileStats = files.map(iter => ({
+                    fileName: iter.file.name,
+                    fileType: iter.file.type,
+                    fileSize: iter.file.size
+                }));
 
-            try{
-            
-                    const fileStats = []
-
-                    for(const iter of files){
-                        console.log(iter.file)
-                        fileStats.push({ fileName: iter.file.name, fileType: iter.file.type, fileSize: iter.file.size })
-                    }
-
-                    let urls;
-
-                    if(fileStats.length !== 0){
-
-                        urls = await api.post('/getUploadUrl', {
-                            files: fileStats
-                        });
-
-                    }
-
-
-
-                    let promises = []
-
-                    for(const [index, file] of files.entries()){
-
-
-                        promises.push(uploadToR2(file, urls.data[index]));
-
-                    }
-
-                    const keys = await Promise.all(promises);
-
-                    const data = {
-
-                        prompt: messageText,
-                        sessionId: current_session_id_ref.current,
-                        isNewTab: new_tab.current,
-                        instruct: comment,
-                        email: user.email,
-                        model: selectedModel,
-                        keys: keys,
-                    }
-
-                
-                if(new_tab.current){
-
-                    new_tab.current = false;
-
-                }    
-
-                let attemps = 0;
-
-                let response;
-
-                while(attemps < 2){
-                    console.log(data)
-
-                    response = await fetch('/api/ask', {
-                        method: 'POST',
-                        signal: abortControllerRef.current.signal,
-                        headers: {
-                            'Authorization': `Bearer ${getAccessToken()}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data) 
-                    });
-
-                    if(response.status === 403){
-
-
-                         const axiosresponse = await axios.post('http://localhost:8080/api/auth/refresh', {}, {
-                            withCredentials: true 
-                        });
-
-                        const newAccessToken = axiosresponse.data.accessToken;
-                        setAccessToken(newAccessToken);
-
-                    }
-                    else{
-                        break;
-                    }
-
-
-                    attemps++;
-
-                }
-
-                setResponseText((prev) => [...prev, { sender: 'user', text: messageText, isComplete: false  }]);
-                if(files.length > 0){
-                    setResponseText((prev) => [...prev, { sender: 'user', file: files, isComplete: false  }]);
-                }
-                sent_message.current = true;
-
-                if (textareaRef.current) {
-
-                    const textarea = textareaRef.current;
-
-                    textareaRef.current.innerHTML = "";
-
-                    textarea.style.height = 'auto';
-
-                    textarea.style.height = `${textarea.scrollHeight}px`;
-
-                    setFiles([])
-
-                }
-
-                const sessionId = response.headers.get('X-Session-ID');
-                //setSessionName(sessionId);
-                current_session_id_ref.current = sessionId
-          
-                const reader = response.body.getReader();
-const decoder = new TextDecoder('utf-8');
-setResponseText((prev) => [...prev, { sender: 'claude', text: '', isComplete: false }]);
-
-let accumulatedText = '';
-let lastUpdateTime = performance.now();
-const UPDATE_INTERVAL = 50; // Milliszekundum - ennyi időnkét frissítjük a UI-t
-
-while (true) {
-    const { value, done } = await reader.read();
-
-    if (done) {
-        console.log('A Claude befejezte a választ.');
-        break;
-    }
-
-    const chunk = decoder.decode(value, { stream: true });
-    accumulatedText += chunk;
-    const now = performance.now();
-
-    // Csak akkor frissítjük a state-et, ha letelt az időintervallum
-    if (now - lastUpdateTime >= UPDATE_INTERVAL) {
-        const textToAdd = accumulatedText;
-        accumulatedText = ''; // Puffer kiürítése
-        lastUpdateTime = now;
-
-        setResponseText((prev) => {
-            const updated = [...prev];
-            const lastIndex = updated.length - 1;
-
-            if (lastIndex >= 0) {
-                updated[lastIndex] = {
-                    ...updated[lastIndex],
-                    text: updated[lastIndex].text + textToAdd,
-                    isComplete: false 
-                };
+                const urlsRes = await api.post('/getUploadUrl', { files: fileStats });
+                keys = await Promise.all(
+                    files.map((file, index) => uploadToR2(file, urlsRes.data[index]))
+                );
             }
-            return updated;
-        });
-    }
-}
 
-// Ciklus végén beírjuk a maradék pufferelt szöveget is, ha maradt
-if (accumulatedText.length > 0) {
-    const finalAdd = accumulatedText;
-    setResponseText((prev) => {
-        const updated = [...prev];
-        const lastIndex = updated.length - 1;
-        if (lastIndex >= 0) {
-            updated[lastIndex] = {
-                ...updated[lastIndex],
-                text: updated[lastIndex].text + finalAdd,
-                isComplete: false 
+            // 2. UI Azonnali frissítése (Optimistic Update)
+            setResponseText(prev => [
+                ...prev,
+                { sender: 'user', text: messageText, isComplete: false },
+                ...(files.length > 0 ? [{ sender: 'user', file: files, isComplete: false }] : [])
+            ]);
+
+            if (textareaRef.current) {
+                textareaRef.current.innerHTML = "";
+                textareaRef.current.style.height = 'auto';
+                setFiles([]);
+            }
+            setContent('');
+     
+
+            // 3. API Kérés előkészítése
+            const data = {
+                prompt: messageText,
+                sessionId: selected_session_id.current,
+                instruct: comment,
+                email: user.email,
+                model: selectedModel,
+                keys: keys,
             };
-        }
-        return updated;
-    });
-}
+
+            // 4. Első próbálkozás a küldésre
+            const fetchConfig = (token) => ({
+                method: 'POST',
+                signal: abortControllerRef.current.signal,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            let response = await fetch('/api/ask', fetchConfig(getAccessToken()));
+
+            // 5. Ha 403-as hiba van, token frissítés és újrapróbálkozás
+            if (response.status === 403) {
+                const axiosResponse = await axios.post('http://localhost:8080/api/auth/refresh', {}, { withCredentials: true });
+                const newAccessToken = axiosResponse.data.accessToken;
                 
-            
-                queryClient.invalidateQueries({ queryKey: ['sessions'] });
-                queryClient.invalidateQueries({ queryKey: ['subData'] });
-
-                number_of_messages_loaded.current = number_of_messages_loaded.current + 1
-          
-            }catch(err){
-
-                console.log(err)
-                setIsLoading(false)
-
-            }
-            finally{
-
-                setIsLoading(false)
-            
-                queryClient.invalidateQueries({ queryKey: ['sessions'] });
-
+                setAccessToken(newAccessToken);
+                response = await fetch('/api/ask', fetchConfig(newAccessToken));
             }
 
+            selected_session_id.current = response.headers.get('X-Session-ID');
+
+            // 6. Stream olvasása és a Claude válaszának felépítése
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            setResponseText(prev => [...prev, { sender: 'claude', text: '', isComplete: false }]);
+
+            let accumulatedText = '';
+            let lastUpdateTime = performance.now();
+            const UPDATE_INTERVAL = 50; 
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                accumulatedText += decoder.decode(value, { stream: true });
+                const now = performance.now();
+
+                if (now - lastUpdateTime >= UPDATE_INTERVAL) {
+                    const textToAdd = accumulatedText;
+                    accumulatedText = '';
+                    lastUpdateTime = now;
+
+                    setResponseText(prev => {
+                        const updated = [...prev];
+                        const lastIndex = updated.length - 1;
+                        if (lastIndex >= 0) {
+                            updated[lastIndex] = { ...updated[lastIndex], text: updated[lastIndex].text + textToAdd };
+                        }
+                        return updated;
+                    });
+                }
+            }
+
+            // Maradék streamelt szöveg hozzáadása
+            if (accumulatedText.length > 0) {
+                setResponseText(prev => {
+                    const updated = [...prev];
+                    const lastIndex = updated.length - 1;
+                    if (lastIndex >= 0) {
+                        updated[lastIndex] = { ...updated[lastIndex], text: updated[lastIndex].text + accumulatedText };
+                    }
+                    return updated;
+                });
+            }
+
+            queryClient.invalidateQueries({ queryKey: ['subData'] });
+            limit.current += 1;
+
+        } catch (err) {
+            console.error("Hiba az üzenet küldésekor: ", err);
+        } finally {
+            setIsLoading(false);
+            queryClient.invalidateQueries({ queryKey: ['sessions'] });
         }
     };
 
@@ -560,8 +482,9 @@ if (accumulatedText.length > 0) {
                         <div className='midbutton'>  
                             <button 
                                 type='button'
-                                className={`send-button ${content !== '' ? 'active' : 'disabled'}`}
+                                className={`send-button ${content !== '' || files.length > 0 ? 'active-send' : 'disabled'}`}
                                 onClick={handleSend} 
+                                disabled={content === '' && files.length === 0}
                                 >
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="currentColor"/>

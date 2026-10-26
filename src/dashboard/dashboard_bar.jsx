@@ -9,7 +9,15 @@ import { ProfilCard } from '../Profil/ProfilCard';
 import { useNavigate } from 'react-router-dom';
 import opensvg from '../assets/open.svg'
 
-export const Bar = ( { getMessages, sessions, current_session_id_ref, number_of_messages_loaded, setNewTab, selected_get_section }) =>{
+export const Bar = ( { getMessages, sessions, selected_session_id, limit, no_more_message_to_load }) =>{
+
+    const setNewTab = () =>{
+
+        no_more_message_to_load.current = true;
+        limit.current = 5;
+        selected_session_id.current = null;
+
+    }
 
     const { sub } = useSub();
 
@@ -53,7 +61,7 @@ export const Bar = ( { getMessages, sessions, current_session_id_ref, number_of_
                                 <button className="csb-logo-btn" onClick={() => navigate('/')}>
                                     <img src={ai} className="csb-logo-img" alt="Claudify logo" />
                                 </button>
-                                <p className="csb-title">Claudify</p>
+                                <p className="csb-title">Cloudify</p>
                             </div>
                             
                             <button 
@@ -82,11 +90,12 @@ export const Bar = ( { getMessages, sessions, current_session_id_ref, number_of_
                                         type="button"
                                         key={chat.id}
                                         onClick={() => {
-                                            number_of_messages_loaded.current = 5;
-                                            selected_get_section.current = true;
-                                            getMessages(chat.session_crypted, false);
+                                            limit.current = 5;
+                                            selected_session_id.current = chat.session_crypted;
+                                            no_more_message_to_load.current = false;
+                                            getMessages();
                                         }}
-                                        className={`csb-session-btn ${current_session_id_ref.current === chat.session_crypted ? 'csb-session-active' : ''}`}
+                                        className={`csb-session-btn ${selected_session_id.current === chat.session_crypted ? 'csb-session-active' : ''}`}
                                     >
                                         {chat.session_placeholder}
                                     </button>
@@ -109,7 +118,7 @@ export const Bar = ( { getMessages, sessions, current_session_id_ref, number_of_
                             {/* A felugró profil kártya konténere */}
                             <div className="csb-profile-popup">
                                 {isOpen && (
-                                    <Shield setIsOpen={setIsOpen}>
+                                    <Shield>
                                         <ProfilCard ref={cardRef} setCardVisibility={setIsOpen}/>
                                     </Shield>
                                 )}

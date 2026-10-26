@@ -49,13 +49,48 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #1f1f1f;
-    opacity: 0.3; 
     transition: all 0.2s ease;
     margin-bottom: 2px;
     opacity: 1;
     color: #0b57d0; 
 }
+
+.send-button{
+
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+    opacity: 1;
+    color: #0b57d0; 
+    transition: all 0.2s ease-in-out;
+
+}
+
+.send-button.disabled{
+
+    visibility: hidden;
+
+}
+
+.active-send{
+    
+  color: #0b57d0; 
+
+}
+
+.active-send:hover{
+    
+  color: #0d61e9; 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+  
+}
+
 
 .midbutton{
     display: flex;
@@ -133,7 +168,8 @@
   line-height: 1.5;
   outline: none;
   padding: 4px 8px;
-  word-break: break-word;
+  word-break: word-break;
+  letter-spacing: 0.5px;
   white-space: pre-wrap;
 }
 

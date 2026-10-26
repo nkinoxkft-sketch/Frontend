@@ -16,7 +16,7 @@ export const LoginCard = forwardRef(({setCardVisibility}, ref) =>{
     const queryClient = useQueryClient()
     const navigate = useNavigate();
 
-  const loginWithGoogle = useGoogleLogin({
+    const loginWithGoogle = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
                 // Fontos: a custom hook 'access_token'-t ad vissza, nem 'credential'-t!

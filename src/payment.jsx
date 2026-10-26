@@ -209,6 +209,7 @@ export const Payment = () => {
                                     style={{ layout: "vertical" }}
                                     createSubscription={async (data, actions) => {
                                         try {
+
                                             const response = await api.post('/create-subscription', {
                                                 plan: plan,
                                                 name: getValues('cname'),

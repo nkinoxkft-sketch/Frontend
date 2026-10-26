@@ -9,6 +9,7 @@
   max-width: 480px; /* Hogy ne nyúljanak el a beviteli mezők túl szélesre */
 }
 
+
 .cas-error-global {
   color: #ef4444;
   font-weight: 600;
@@ -153,4 +154,144 @@
 .cas-danger-btn:hover {
   background-color: #fef2f2;
   border-color: #ef4444;
+}
+
+/* =========================================
+   Custom Auth Card (Claudify Design)
+   Előtag: ca-
+   ========================================= */
+
+/* Teljes oldalas középre igazítás */
+.ca-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f9fafb; /* Finom szürke háttér, hogy a kártya kiemelkedjen */
+  padding: 20px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Auth Kártya (A cp-card-popup stílusjegyeivel) */
+.ca-auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0,0,0,0.05);
+  border: 1px solid #f3f4f6;
+  text-align: center;
+}
+
+/* Szöveges elemek */
+.ca-title {
+  font-size: 22px;
+  color: #111827;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+}
+
+.ca-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+/* Form és Input */
+.ca-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ca-input-code {
+  width: 100%;
+  padding: 14px;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 8px;
+  color: #111827;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ca-input-code:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
+}
+
+/* Elsődleges Gomb (Fekete Claudify stílus) */
+.ca-btn-primary {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ca-btn-primary:hover:not(:disabled) {
+  background-color: #000000;
+}
+
+.ca-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Hibaüzenet (A cp-text-danger alapján) */
+.ca-text-danger {
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: -4px;
+}
+
+/* Újraküldés szekció (Elválasztóval, mint a cp-divider-row) */
+.ca-resend-container {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.ca-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 12px 0;
+  font-weight: 500;
+}
+
+/* Másodlagos Gomb (A cp-btn-secondary alapján) */
+.ca-btn-secondary {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #f3f4f6;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.ca-btn-secondary:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.ca-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

@@ -10,8 +10,8 @@ import './profil.css';
 const logOut = async (setIsLogedIn, queryClient, setCardVisibility) => {
     try {
         await api.post('/auth/logout');
-        
-        resfreshStates(queryClient); 
+
+        queryClient.clear();
 
         setIsLogedIn(false);
 
@@ -89,7 +89,7 @@ export const ProfilCard = forwardRef(({ setCardVisibility }, ref) => {
                             </div>
 
                             <div className="cp-detail-row">
-                                <p className="cp-detail-label">Remaining messages:</p>
+                                <p className="cp-detail-label">Remaining credits:</p>
                                 <p className="cp-detail-value">{sub.messages}</p>
                             </div>
                         </div>
