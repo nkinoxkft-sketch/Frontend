@@ -89,7 +89,7 @@ function App() {
 
           try {
 
-            const res = await api.post('/auth/refresh');
+            const res = await api.post('/api/auth/refresh');
               
             setAccessToken(res.data.accessToken);
 
