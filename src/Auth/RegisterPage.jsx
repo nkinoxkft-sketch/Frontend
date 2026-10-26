@@ -104,7 +104,7 @@ export const RegisterPage = () =>{
         register('cf');
         if (window.turnstile && turnstileRef.current && !widgetId.current) {
         widgetId.current = window.turnstile.render(turnstileRef.current, {
-            sitekey: '0x4AAAAAAFKYH9Ss5fCyHtPD',
+            sitekey: '0x4AAAAAAFm1riUeYFvJMDTX',
             callback: (token) => {
             setValue('cf', token, { shouldValidate: true, shouldDirty: true });
             },
