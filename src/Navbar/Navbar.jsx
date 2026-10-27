@@ -21,13 +21,18 @@ export const NavBar = React.memo(function Navbar()  {
 
     const scroll = (id) =>{
 
-        const element = document.getElementById(id);
+        setTimeout(() => {
+            
+            const element = document.getElementById(id);
 
-        if(element){
+            if(element){
 
-            element.scrollIntoView({ behavior: 'smooth' });
+                element.scrollIntoView({ behavior: 'smooth' });
 
-        }
+            }
+
+        }, 100);
+
 
     }
 

@@ -10,6 +10,7 @@ import './account.css'
 import { z } from 'zod';
 import { BackendError } from '../errors';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../main';
 const authSchema = z.object({
   auth: z.string()
     .length(6, 'A 6-digit code is required!')
@@ -128,6 +129,8 @@ export const Auth = () =>{
 
     const navigate = useNavigate();
 
+    const { setIsLogedIn } = useAuth()
+
     const sendCode = async (data) =>{
 
         setBackendError(null)
@@ -152,15 +155,15 @@ export const Auth = () =>{
                 console.log(response.data.message)
 
             }
-
+            setIsLogedIn(false);
             queryClient.clear();
             navigate('/');
 
         } catch (err) {
 
-            setBackendError(err.response.data.error)
+            console.error(err);
 
-            console.error(err.response.data.error);
+            setBackendError(err.response.data.error)
 
 
         }

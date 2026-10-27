@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { api, setAccessToken, getAccessToken} from '../interceptor.jsx';
 import axios from 'axios';
 import ModelDropdown from '../mode.jsx';
+import { useAuth } from '../main.jsx';
 
 
 const uploadToR2 = async (file, file_data) =>{  
@@ -25,10 +26,11 @@ const uploadToR2 = async (file, file_data) =>{
 
 
 }
-export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setResponseText, limit }) =>{
+export const Textarea = ( {  isLoadingResponseText, setIsLoading, selected_session_id, setResponseText, limit, forceScrollRef }) =>{
 
     const { user } = useUser();
     const { sub } = useSub();
+    const { isLoading } = useAuth()
 
     const navigate = useNavigate();
 
@@ -162,7 +164,7 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
     };
 
     const handleKeyDown = (e) => {
-
+  
         if (e.key === 'Enter' && !e.shiftKey) {
 
             e.preventDefault(); 
@@ -209,7 +211,7 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-
+        
 
 
     }, [isOpenPlus])
@@ -217,7 +219,8 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
     const abortControllerRef = useRef(null);
 
     const handleSend = async () => {
-        if (isLoading) return;
+
+        if (isLoadingResponseText) return;
 
         const messageText = textareaRef.current?.textContent?.trim() || "";
 
@@ -267,6 +270,8 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
                 model: selectedModel,
                 keys: keys,
             };
+
+            forceScrollRef.current = true;
 
             // 4. Első próbálkozás a küldésre
             const fetchConfig = (token) => ({
@@ -344,6 +349,7 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
         } finally {
             setIsLoading(false);
             queryClient.invalidateQueries({ queryKey: ['sessions'] });
+        
         }
     };
 
@@ -399,7 +405,7 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
                                     <textarea
                                         className='custom-textarea'
                                         id="user-comment"
-                                        value={comment}
+                                        value={comment ?? ""}
                                         onChange={(e) => setComment(e.target.value)}
                                         rows={4}
                                         cols={40}
@@ -422,14 +428,20 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
                         style={{ display: 'none' }} 
                         onChange={handleFileChange} 
                     />
-                              
-                    <div //NOSONAR
+                    <div className='text-file-wrapper'>
+                        <div //NOSONAR
                         ref={textareaRef}
                         className="gemini-textarea"
                         
                         contentEditable={(sub.status !== null && Number(sub.messages) > 0) ? true : false} //NOSONAR (sub.messages && sub.messages !== '0')
                         onClick={(sub.messages === '0' || sub.status === null) ? () => {
-                            void navigate('/', { state: { scrollToSubscriptions: true } })
+                            
+                            console.log(isLoading, sub)
+                            if(!isLoading){
+
+                                void navigate('/', { state: { scrollToSubscriptions: true } })
+
+                            }
                             
                       
                         } : null}
@@ -438,7 +450,7 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
                         onInput={(e) => {handleChange(e)}}
                         onKeyDown={handleKeyDown}
                         onPaste={handlePaste}
-                        data-placeholder="Ask Claude something..."
+                        data-placeholder="Ask something..."
                         role="textbox"
                         aria-multiline="true"
                         onBlur={() => {
@@ -452,32 +464,34 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
                                         document.body.scrollTop = 0;
                                         }, 150);
                                     }}
-                    /> 
-                    {files.length > 0 && (
-                      <div className="file-preview-container">
-                        {files.map((item) => (
-                          <div key={item.id} className="preview-item-wrapper">
-                            {item.previewUrl ? (
-                              <div className="preview-item image-preview">
-                                <img src={item.previewUrl} alt="Előnézet" />
-                                <span className="file-name">{item.file.name}</span>
-                              </div>
-                            ) : (
-                              <div className="preview-item doc-preview">
-                                <span className="file-icon">📄</span>
-                                <div className="file-info">
-                                  <span className="file-name">{item.file.name}</span>
-                                  <span className="file-size">{(item.file.size / 1024).toFixed(1)} KB</span>
+                        /> 
+                        {files.length > 0 && (
+                        <div className="file-preview-container">
+                            {files.map((item) => (
+                            <div key={item.id} className="preview-item-wrapper">
+                                {item.previewUrl ? (
+                                <div className="preview-item image-preview">
+                                    <img src={item.previewUrl} alt="Előnézet" />
+                                    <span className="file-name">{item.file.name}</span>
                                 </div>
-                              </div>
-                            )}
-                            <button type="button" className="remove-file-btn" onClick={() => removeFile(item.id)}>✕</button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                                ) : (
+                                <div className="preview-item doc-preview">
+                                    <span className="file-icon">📄</span>
+                                    <div className="file-info">
+                                    <span className="file-name">{item.file.name}</span>
+                                    <span className="file-size">{(item.file.size / 1024).toFixed(1)} KB</span>
+                                    </div>
+                                </div>
+                                )}
+                                <button type="button" className="remove-file-btn" onClick={() => removeFile(item.id)}>✕</button>
+                            </div>
+                            ))}
+                        </div>
+                        )}
+                    </div>     
+                    
                     <ModelDropdown setSelectedModel={setSelectedModel} selectedModel={selectedModel}/>
-                    {!isLoading && (
+                    {!isLoadingResponseText && (
 
                         <div className='midbutton'>  
                             <button 
@@ -493,7 +507,7 @@ export const Textarea = ( {  isLoading, setIsLoading, selected_session_id, setRe
                         </div>
                     ) }
 
-                    {isLoading && (
+                    {isLoadingResponseText && (
 
                         <div className='midbutton'>  
                             <button 

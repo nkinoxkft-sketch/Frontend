@@ -23,7 +23,7 @@ import { EditProfilePage } from './Profil/Editpage';
 import './Profil/profil.css';
 function App() {
 
-  const { isLogedIn, setIsLogedIn } = useAuth();
+  const { isLogedIn, setIsLogedIn, setIsloading } = useAuth();
   const [ isVisibleNav, setIsVisibleNav ] = useState(false);
 
   const loc = useLocation();
@@ -95,9 +95,13 @@ function App() {
 
             setIsLogedIn(true);
 
+            setIsloading(false);
+
           } catch (err) {
    
             setIsLogedIn(false);
+
+            setIsloading(false);
 
             console.log(err)
 

@@ -17,10 +17,14 @@ export const AuthProvider = ({ children }) => {
 
     const [isLogedIn, setIsLogedIn] = useState(false);
 
+    const [isLoading, setIsloading] = useState(true);
+
     const value = useMemo(() => ({
         isLogedIn,
-        setIsLogedIn
-    }), [isLogedIn]);
+        setIsLogedIn,
+        isLoading,
+        setIsloading,
+    }), [isLogedIn, isLoading]);
 
     return (
         <AuthContext.Provider value={value}>

@@ -7,6 +7,17 @@
   display: flex;
   height: 100vh;
   font-family: 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+}
+
+
+
+@media  (max-width: 768px) {
+  
+  .csb-container{
+    position: absolute;
+    z-index: 100;
+  }
 }
 
 /* Maga az oldalsáv */
@@ -17,6 +28,7 @@
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
+  overflow-y: hidden;
 }
 
 /* Felső blokk */
@@ -37,6 +49,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  overflow-y: hidden;
 }
 
 .csb-logo-btn {
@@ -74,6 +87,7 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s;
+
 }
 
 .csb-close-btn:hover,
@@ -127,6 +141,7 @@
 .csb-mid {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 0 12px;
 }
 
@@ -146,6 +161,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+
 }
 
 .csb-session-btn {
@@ -241,6 +257,7 @@
   top: 16px;
   left: 16px;
   z-index: 50;
+  min-width: 50px;
 }
 
 .fade-effect-bottom{

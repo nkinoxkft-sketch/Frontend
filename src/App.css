@@ -17,12 +17,20 @@
   height: 100dvh;
   max-height: 100dvh;
   position: relative;
+  overflow-y: hidden;
+}
+
+
+
+.dash-bg{
+  overflow: hidden;
 }
 body {
 
   background-color: var(--bg-paper);
   margin: 0; 
   padding: 0;
+  overflow: hidden;
 
 }
 
@@ -34,6 +42,7 @@ body {
 .mainPage{
 
   background-color: var(--bg-paper);
+  overflow-y: hidden;
 
 
 }

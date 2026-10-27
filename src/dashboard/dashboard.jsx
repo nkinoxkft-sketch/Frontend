@@ -6,37 +6,34 @@ import remarkGfm from 'remark-gfm'; // Táblázatokhoz, pipálható listákhoz
 import { Textarea } from './textarea';
 import { api } from '../interceptor';
 import { Bar } from './dashboard_bar';
-import { useAuth } from '../main';
 import React from 'react';
 import { CodeBlock } from './code';
-
+import { LoadingBar } from '../Loading/Loading';
 export const Dashboard = () =>{
   
-  const { isLogedIn } = useAuth()
-
-  const [sessions, setSessions] = useState([])
-  const [isLoadingSessions, setIsLoadingSessions] = useState(true);
-
   const selected_session_id = useRef(null);
   const limit = useRef(5);
   const loading_prev_messages = useRef(false);
+  const getting_messages = useRef(false);
 
   const [responseText, setResponseText] = useState([]);
   const [isLoadingResponseText, setIsLoadingResponseText] = useState(false);
+  const [isLoadingPrevText, setIsLoadingPrevText] = useState(false);
 
   const contentRef = useRef(null);
   const previousScrollHeightRef = useRef(null);
 
   const no_more_message_to_load = useRef(false);
 
+  const forceScrollRef = useRef(false);
+
   const getMessages = async () =>{
     
-    console.log('getmessage')
+    //console.log('getmessage')
     try{
 
       if(isLoadingResponseText){ return }
-      setIsLoadingResponseText(true);
-      
+
       const response = await api.get('/getMessages', {
         params: { 
           session_id: selected_session_id.current, 
@@ -94,7 +91,7 @@ export const Dashboard = () =>{
         
 
       } 
-      console.log(loading_prev_messages.current, 'prev')
+      //console.log(loading_prev_messages.current, 'prev')
       if(loading_prev_messages.current){
 
         console.log('prev')
@@ -102,7 +99,8 @@ export const Dashboard = () =>{
         setResponseText(prev => [...formattedMessages, ...prev]);
 
       }
-      else{
+      else{ 
+        console.log('sima')
 
         setResponseText(formattedMessages);
 
@@ -116,52 +114,15 @@ export const Dashboard = () =>{
     finally{
 
       setIsLoadingResponseText(false);
-
+      setIsLoadingPrevText(false);
 
     }
     
   };
 
-  const getSessions = async () =>{
+  
 
-    try{
 
-      setIsLoadingSessions(true);
-
-      const response = await api.get('/getSessions');
-
-      const data =  response.data.sessions;
-
-      if(data){
-
-        setSessions(data);
-
-      }
-      
-
-    }catch(err){
-
-      console.log(err)
-
-    }finally{
-
-      setIsLoadingSessions(false);
-
-    }
-
-  }
-
-  useEffect(() => {
-
-    if(isLogedIn && !isLoadingResponseText){
-
-      void getSessions();
-
-      console.log('getsession')
-
-    }
-
-  }, [isLogedIn])
 
   useLayoutEffect(() => {
 
@@ -182,15 +143,20 @@ export const Dashboard = () =>{
 
 
     }
-    else{
+    else if(forceScrollRef.current || getting_messages.current){
 
       container.scrollTo({
         top: container.scrollHeight,
         behavior: 'instant'
       });
 
-    }
+      forceScrollRef.current = false;
+      getting_messages.current = false;
 
+    }
+    
+    
+    console.log('response text', responseText.length, responseText)
     
   }, [responseText]);
 
@@ -201,8 +167,8 @@ export const Dashboard = () =>{
     if (!container) return; 
 
     const handleScroll = () => {
-      console.log(container.scrollTop, container.scrollHeight, loading_prev_messages.current, no_more_message_to_load.current)
-      if (container.scrollTop <= 10 && !no_more_message_to_load.current &&  !loading_prev_messages.current) {
+      //console.log(container.scrollTop, container.scrollHeight, loading_prev_messages.current, no_more_message_to_load.current)
+      if (container.scrollTop <= 10 && !no_more_message_to_load.current &&  !loading_prev_messages.current, isLoadingResponseText) {
 
         limit.current += 5;
 
@@ -212,40 +178,48 @@ export const Dashboard = () =>{
 
         console.log('loading', limit.current)
 
-        getMessages();
+        void getMessages();
 
       }
-
-      if(container.scrollTop + container.clientHeight >= container.scrollHeight){
-
-        container.classList.remove('fade-effect-bottom')
-
-      }
-      else{
+    
+      if(container.scrollTop + container.clientHeight <= container.scrollHeight - 10){
 
         container.classList.add('fade-effect-bottom')
 
       }
-    };
+      else{
 
+        container.classList.remove('fade-effect-bottom')
+
+      }
+    };
+  
     container.addEventListener('scroll', handleScroll);
 
 
     return () => {
       container.removeEventListener('scroll', handleScroll);
     };
-  }, [isLoadingResponseText]);
+  }, [isLoadingResponseText, isLoadingPrevText]);
 
   return(
 
     <div className="cdash-screen">
+      {isLoadingPrevText && (
 
+        <LoadingBar/>
+
+      )}
     <Bar 
-        sessions={sessions} 
+        isLoadingResponseText={isLoadingResponseText} 
         selected_session_id={selected_session_id}
         limit={limit}
         getMessages={getMessages} 
         no_more_message_to_load={no_more_message_to_load}
+        getting_messages={getting_messages}
+        setIsLoadingPrevText={setIsLoadingPrevText}
+        isLoadingPrevText={isLoadingPrevText}
+        setResponseText={setResponseText}
 
     />
 
@@ -253,6 +227,16 @@ export const Dashboard = () =>{
 
         {/* Chat Előzmények / Üzenetek (Ez került felülre) */}
         <div className="cdash-chat-history" ref={contentRef}>
+
+            {responseText.length === 0 && (
+              <div className="empty-chat-container">
+                <div className="empty-state-content">
+                  <div className="logo-icon">☁️</div>
+                  <h1 className="brand-name">Cloudify</h1>
+                  <p className="welcome-text">Pick a chat from the menu or start a fresh one to make it rain ideas.</p>
+                </div>
+              </div>
+            )}
             {responseText.map((msg, index) => (
                 <ChatMessage key={index} msg={msg} />
             ))}
@@ -284,7 +268,8 @@ export const Dashboard = () =>{
                 limit={limit} 
                 setResponseText={setResponseText} 
                 setIsLoading={setIsLoadingResponseText} 
-                isLoading={isLoadingResponseText}
+                isLoadingResponseText={isLoadingResponseText}
+                forceScrollRef={forceScrollRef}
 
             />
         </div>
@@ -319,15 +304,16 @@ export function GeminiPromptAccordion({ promptText }) {
   return (
     <details className="group my-2 text-[#e3e3e3] text-base leading-relaxed transition-all">
       {/* A fejléc: nincs keret, nincs háttér, csak a szöveg és egy diszkrét nyíl */}
-      <summary onClick={(e) => {
-      if (!islarge) e.preventDefault();
-    }}
-    className={`summ flex items-start justify-between gap-3 py-2  transition-colors ${
-      islarge 
-        ? "cursor-pointer group-hover:text-white" 
-        : "cursor-default pointer-events-none"
-    }`}
-      
+      <summary 
+        onClick={(e) => {
+          if (!islarge) e.preventDefault();
+        }}
+        // Itt adtuk hozzá a list-none és a webkit elrejtő osztályokat:
+        className={`list-none [&::-webkit-details-marker]:hidden summ flex items-start justify-between gap-3 py-2 transition-colors ${
+          islarge 
+            ? "cursor-pointer group-hover:text-white" 
+            : "cursor-default pointer-events-none"
+        }`}
       >
         <div className="flex-1">
           {/* Zárt állapotban a preview vagy rövidített szöveg látszik, nyitva eltűnik ez a blokk */}

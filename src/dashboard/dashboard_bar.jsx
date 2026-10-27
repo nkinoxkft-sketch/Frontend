@@ -8,16 +8,23 @@ import { Shield } from '../Shield/Shield';
 import { ProfilCard } from '../Profil/ProfilCard';
 import { useNavigate } from 'react-router-dom';
 import opensvg from '../assets/open.svg'
-
-export const Bar = ( { getMessages, sessions, selected_session_id, limit, no_more_message_to_load }) =>{
+import { useAuth } from '../main';
+import { api } from '../interceptor';
+import { LoadingBar, LoadingSpinner } from '../Loading/Loading';
+export const Bar = ( { getMessages, isLoadingResponseText, isLoadingPrevText, setIsLoadingPrevText, selected_session_id, limit, no_more_message_to_load, getting_messages, setResponseText }) =>{
 
     const setNewTab = () =>{
-
+        
+        console.log('newTab')
         no_more_message_to_load.current = true;
         limit.current = 5;
         selected_session_id.current = null;
+        setCurrentSessionId(null);
+        setResponseText([])
 
     }
+
+    const [ currentSessionId, setCurrentSessionId ] = useState(null);
 
     const { sub } = useSub();
 
@@ -25,9 +32,121 @@ export const Bar = ( { getMessages, sessions, selected_session_id, limit, no_mor
 
     const [isOpen, setIsOpen] = useState(false);
 
+    const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+
+    useEffect(() => {
+
+        //console.log(windowSize.width)
+        if(windowSize.width <= 768){
+
+            setNavVisible(false);
+            
+        }
+
+    }, [])
+
     const cardRef = useRef(null)
 
     const navigate = useNavigate();
+
+    const session_limit = useRef(20);
+    const loading_prev_sessions = useRef(false);
+
+    const contentRef = useRef(null);
+    const previousScrollHeightRef = useRef(null);
+
+    const { isLogedIn } = useAuth();
+
+    const [ sessions, setSessions] = useState([]);
+
+    const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+    const no_more_session = useRef(false);
+
+    const first_load = useRef(true);
+    const block_session_request = useRef(false);
+
+    const getSessions = async () =>{
+
+        try{
+        
+            if(block_session_request.current){
+
+                block_session_request.current = false;
+
+                return;
+
+            }
+
+            if(isLoadingSessions){ return }
+
+            setIsLoadingSessions(true);
+
+            //console.log('getsession')
+
+
+            const response = await api.get('/getSessions',
+                {
+
+                params: { 
+                limit: Number(session_limit.current),
+                },
+
+            });
+
+            const data =  response.data.sessions;
+
+            if(data){
+
+                if(loading_prev_sessions.current){
+        
+                    setSessions(prev => [...prev, ...data]);
+
+                }
+                else {
+                    
+                    setSessions(data);
+                    
+                    no_more_session.current = false;
+                  
+
+                }
+                
+                
+                if(data.length < 20){
+
+                    no_more_session.current = true;
+
+                }
+
+            }
+            
+
+        }catch(err){
+
+            console.log(err)
+
+        }finally{
+
+            setIsLoadingSessions(false);
+
+        }
+
+    }
+
+    useEffect(() => {
+
+        if(isLogedIn && !isLoadingPrevText && !isLoadingResponseText){
+
+            session_limit.current = 20;
+            //console.log('loadfirst')
+            void getSessions();
+
+        }
+
+    }, [isLogedIn, isLoadingPrevText, isLoadingResponseText])
 
     useEffect(() => {
 
@@ -48,11 +167,59 @@ export const Bar = ( { getMessages, sessions, selected_session_id, limit, no_mor
 
     }, [isOpen]);
 
+    useEffect(() => {
+        
+        const container = contentRef.current;
+
+        if (!container) return; 
+    
+        const handleScroll = () => {
+            
+          const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 10;
+
+          if (isNearBottom && !loading_prev_sessions.current && !no_more_session.current) {
+    
+            session_limit.current += 20;
+    
+            previousScrollHeightRef.current = container.scrollHeight;
+
+            loading_prev_sessions.current = true;
+           // console.log('loadlast')
+            void getSessions();
+    
+          }
+    
+        };
+  
+        container.addEventListener('scroll', handleScroll);
+    
+    
+        return () => {
+          container.removeEventListener('scroll', handleScroll);
+        };
+
+    }, [isLoadingSessions]);
+
+
+    useEffect(() => {
+
+        loading_prev_sessions.current = false;
+
+    }, [sessions])
+
+
+
 
     return(
        <div className="csb-container">
             {navVisible ? (
                 <div className="csb-sidebar">
+
+                    {isLoadingSessions && (
+
+                        <LoadingBar/>
+
+                    )}
                     
                     {/* Felső rész: Logó, Bezárás és Új Chat */}
                     <div className="csb-top">
@@ -82,24 +249,33 @@ export const Bar = ( { getMessages, sessions, selected_session_id, limit, no_mor
                     </div>
 
                     {/* Középső rész: Korábbi beszélgetések (Görgethető) */}
-                    <div className="csb-mid">
+                    <div className="csb-mid" ref={contentRef}>
                         {sub.status !== 'Basic' && sub.status !== null && (
                             <div className="csb-sessions">
-                                {[...sessions].reverse().map((chat) => (
+                                {[...sessions].map((chat) => (
                                     <button
                                         type="button"
                                         key={chat.id}
                                         onClick={() => {
-                                            limit.current = 5;
-                                            selected_session_id.current = chat.session_crypted;
-                                            no_more_message_to_load.current = false;
-                                            getMessages();
+                                            if(selected_session_id.current !== chat.session_crypted){
+
+                                                limit.current = 5;
+                                                selected_session_id.current = chat.session_crypted;
+                                                no_more_message_to_load.current = false;
+                                                getting_messages.current = true;
+                                                setCurrentSessionId(chat.session_crypted)
+                                                setIsLoadingPrevText(true)
+                                                block_session_request.current = true;
+                                                getMessages();
+
+                                            }
                                         }}
-                                        className={`csb-session-btn ${selected_session_id.current === chat.session_crypted ? 'csb-session-active' : ''}`}
+                                        className={`csb-session-btn ${currentSessionId === chat.session_crypted ? 'csb-session-active' : ''}`}
                                     >
                                         {chat.session_placeholder}
                                     </button>
                                 ))}
+
                             </div>
                         )}   
                     </div>

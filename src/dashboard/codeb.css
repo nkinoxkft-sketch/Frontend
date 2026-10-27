@@ -6,10 +6,11 @@
 .ccode-wrapper {
   margin: 16px 0;
   border-radius: 8px;
-  overflow: hidden;
+ 
   border: 1px solid #2D2D2D;
   background-color: #1E1E1E;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
 }
 
 /* Fejléc sáv */
@@ -22,6 +23,9 @@
   border-bottom: 1px solid #2D2D2D;
   font-family: 'Google Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   user-select: none;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 /* Nyelv megnevezése */

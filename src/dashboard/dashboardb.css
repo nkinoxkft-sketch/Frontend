@@ -11,6 +11,8 @@
   overflow: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #e3e3e3; /* Általános világos szövegszín */
+  position: relative;
+
 }
 
 .cdash-main-workspace {
@@ -18,18 +20,22 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  padding: 1rem;
+  overflow: auto;
 }
+
+
 
 /* Üzenetek területe */
 .cdash-chat-history {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   scroll-behavior: smooth;
-   overscroll-behavior: contain;
+  overscroll-behavior: contain;
+  background-color: #131314;
 }
 
 /* Görgetősáv formázása (sötét módhoz) */
@@ -252,3 +258,76 @@
   margin-bottom: 4px;
 }
 
+/* Ez a konténer kitölti a rendelkezésre álló teres a sidebar mellett */
+.empty-chat-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Vagy amekkora a chat ablakod magassága (pl. 100%) */
+  width: 100%;
+  background-color: #131314 !important;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.empty-state-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Finom belépő animáció betöltéskor */
+  animation: fadeUpIn 1s ease-out forwards;
+}
+
+.logo-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  /* Folyamatos, lassú lebegő animáció */
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(0, 198, 255, 0.2));
+}
+
+.brand-name {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+  /* Modern kék-cián színátmenet a szövegen */
+  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 1px;
+}
+
+.welcome-text {
+  color: #888888;
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+/* --- Animációk (Keyframes) --- */
+
+@keyframes fadeUpIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}

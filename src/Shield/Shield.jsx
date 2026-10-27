@@ -9,7 +9,7 @@ export function Shield({ children, className}) {
     const navigate = useNavigate();
     const location = useLocation();
     const [isChecking, setIsChecking] = useState(true);
-    const { isLogedIn, setIsLogedIn } = useAuth(); 
+    const { isLogedIn, setIsLogedIn, setIsLoading } = useAuth(); 
 
     useEffect(() => {
      
@@ -27,10 +27,12 @@ export function Shield({ children, className}) {
                 setAccessToken(res.data.accessToken);
 
                 setIsLogedIn(true);
+                setIsLoading(false);
 
             } catch (err) {
      
                 setIsLogedIn(false);
+                setIsLoading(false);
 
                 if (location.pathname !== '/loginpage' && location.pathname !== '/') {
 
