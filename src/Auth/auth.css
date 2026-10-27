@@ -15,6 +15,21 @@
   padding: 24px 16px;
   background-color: var(--bg-paper);
   font-family: inherit;
+  overflow-y: auto;
+  max-height: 100dvh;
+  
+}
+.auth-page {
+  /* Firefox */
+  scrollbar-width: none; 
+
+  /* Internet Explorer és Edge régebbi verziói */
+  -ms-overflow-style: none; 
+}
+
+/* Chrome, Safari, Opera (Webkit alapú böngészők) */
+.auth-page::-webkit-scrollbar {
+  display: none;
 }
 
 .auth-card {
