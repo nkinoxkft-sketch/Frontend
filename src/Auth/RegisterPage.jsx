@@ -217,16 +217,7 @@ export const RegisterPage = () =>{
             </div>
             </form>
 
-            <div className="auth-divider">
-            <span>or sign in with</span>
-            </div>
-
-            <div className="auth-social">
-            <button type="button" className="social-btn google-btn">
-                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12.24 10.285V13.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l2.427-2.334C18.155 2.114 15.433 1 12.24 1 6.033 1 1 6.033 1 12.24s5.033 11.24 11.24 11.24c6.478 0 10.793-4.537 10.793-10.986 0-.745-.079-1.32-.174-1.882H12.24z"/></svg>  
-                Google
-            </button>
-            </div>
+ 
         </div>
 
         <div className="auth-footer">
