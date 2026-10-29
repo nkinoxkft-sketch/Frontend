@@ -1,47 +1,64 @@
 :root {
-  --bg-paper-d: #131314; /* Meleg törtfehér */
-  --bg-paper-d-birght: #1e1e1e; /* Majdnem fekete */
-  --text-muted: #5C5B5A; /* Sötétszürke */
-  
-  --accent-color: #D97757;
-  --border-color: #1e1e1e;
-  --border-btn: rgb(255, 255, 255, 0.1);
-  
-  --font-serif: 'Georgia', 'Times New Roman', serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-
-  --font-text: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-size: 1rem;             
-  --line-height: 1.5;           
-  --font-weight: 400;            
-  --color: #e3e3e3;
+    --csb-bg-primary: #1E1E1E;
+    --csb-bg-secondary: #2D2D2D;
+    --csb-bg-tertiary: #3C4043;
+    --csb-border-color: #2D2D2D;
+    --csb-border-secondary: #3C4043;
+    --csb-text-primary: #E8EAED;
+    --csb-text-secondary: #BDC1C6;
+    --csb-text-tertiary: #9AA0A6;
+    --csb-hover-bg: #2D2D2D;
+    --csb-active-bg: #2D2D2D;
+    --csb-active-border: #3C4043;
+    --csb-active-text: #E8EAED;
+    --csb-scrollbar-thumb: #3C4043;
+    --csb-scrollbar-hover: #5F6368;
+    --csb-shadow-small: 0 2px 4px rgba(0,0,0,0.3);
+    --csb-shadow-medium: 0 1px 3px rgba(0,0,0,0.1);
+    --csb-icon-filter: invert(0);
 }
 
-.apply-div{
+[data-theme="light"] {
+  --csb-bg-primary: #FFFFFF;
+  --csb-bg-secondary: #F8F9FA;
+  --csb-bg-tertiary: #F1F3F4;
+  --csb-border-color: #E8EAED;
+  --csb-border-secondary: #DADCE0;
+  --csb-text-primary: #202124;
+  --csb-text-secondary: #5F6368;
+  --csb-text-tertiary: #5F6368;
+  --csb-hover-bg: #F1F3F4;
+  --csb-active-bg: #E8F0FE;
+  --csb-active-border: #D2E3FC;
+  --csb-active-text: #1A73E8;
+  --csb-scrollbar-thumb: #DADCE0;
+  --csb-scrollbar-hover: #BDC1C6;
+  --csb-shadow-small: 0 1px 3px rgba(0,0,0,0.15);
+  --csb-shadow-medium: 0 1px 3px rgba(0,0,0,0.1);
+  --csb-icon-filter: invert(1);
+}
 
+.apply-div {
     display: flex;
     justify-content: right;
 }
 
-.apply{
-
+.apply {
     justify-self: right;
     width: fit-content;
-    color: white;
+    color: var(--csb-text-primary);
     cursor: pointer;
-    background-color: var(--bg-paper-d);
+    background-color: var(--csb-bg-secondary);
     border-radius: 10px;
     padding-left: 0.4rem;
     padding-right: 0.4rem;
 }
 
-.apply:hover{
-
-    color: var(--text-muted);
+.apply:hover {
+    color: var(--csb-text-tertiary);
 }
 
-.stop-sendbutton{
-
+.stop-sendbutton {
     background: transparent;
     border: none;
     cursor: pointer;
@@ -52,11 +69,10 @@
     transition: all 0.2s ease;
     margin-bottom: 2px;
     opacity: 1;
-    color: #0b57d0; 
+    color: #0b57d0;
 }
 
-.send-button{
-
+.send-button {
     background: transparent;
     border: none;
     cursor: pointer;
@@ -67,387 +83,363 @@
     transition: all 0.2s ease;
     margin-bottom: 2px;
     opacity: 1;
-    color: #0b57d0; 
+    color: #0b57d0;
     transition: all 0.2s ease-in-out;
-
 }
 
-.send-button.disabled{
-
+.send-button.disabled {
     visibility: hidden;
-
 }
 
-.active-send{
-    
-  color: #0b57d0; 
-
+.active-send {
+    color: #0b57d0;
 }
 
-.active-send:hover{
-    
-  color: #0d61e9; 
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
-  
+.active-send:hover {
+    color: #0d61e9;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-
-.midbutton{
+.midbutton {
     display: flex;
     align-items: center;
 }
 
-.select-section{
-
+.select-section {
     position: relative;
-
-}
-.select-card{
-
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  z-index: 1000;
-  background-color: var(--text-main-d);
-  border-radius: 10px;
-  padding: 1rem;
-  gap: 0.5rem;
-  bottom: 200%;
-  width: 100px;
-  height: 100px;
 }
 
-.select-btn{
-
-  color: #888888;
-  font-family: var(--font-sans);
-  cursor: pointer;
-  padding: 0.1rem;
-
+.select-card {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1000;
+    background-color: var(--csb-bg-secondary);
+    border-radius: 10px;
+    padding: 1rem;
+    gap: 0.5rem;
+    bottom: 200%;
+    width: 100px;
+    height: 100px;
 }
 
-.select-btn:hover{
-
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
+.select-btn {
+    color: var(--csb-text-tertiary);
+    font-family: var(--font-sans);
+    cursor: pointer;
+    padding: 0.1rem;
 }
 
+.select-btn:hover {
+    background-color: var(--csb-hover-bg);
+    border-radius: 10px;
+}
 
-.cask{
+.ask {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+}
+
+.cask {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    background-color: var(--bg-paper-d-birght);
+    background-color: var(--csb-bg-primary);
     border-radius: 24px;
     padding: 8px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--csb-border-color);
     transition: border-color 0.2s;
     width: 100%;
     max-width: 600px;
-    margin: 0 auto;
-    gap:0.5rem;
-  
+    gap: 0.5rem;
+}
 
+.settings {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    width: 100%;
 }
 
 .cask:focus-within {
-  border-color: rgba(255, 255, 255, 0.25);
+    border-color: var(--csb-border-secondary);
 }
 
 .gemini-textarea {
-  flex: 1;
-  display: flex;
-  align-items: center; /* Függőlegesen középre húzza a szöveget és a kurzort */
-  min-height: 24px;
-  max-height: 200px;
-  overflow-y: auto;
-  background: transparent;
-  color: #e3e3e3;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  line-height: 1.5;
-  outline: none;
-  padding: 4px 8px;
-  word-break: word-break;
-  letter-spacing: 0.5px;
-  white-space: pre-wrap;
+    width: 100%;
+    min-height: 38px;
+    max-height: 300px;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    color: var(--csb-text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    padding: 4px 8px;
+    overflow-y: auto;
 }
 
 .gemini-textarea::-webkit-scrollbar {
-  width: 5px;
-  background: transparent;
+    width: 5px;
+    background: transparent;
 }
 
 .gemini-textarea::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 3px;
+    background: transparent;
+    border-radius: 3px;
 }
 
-/* Ha ráviszed az egeret a sidebarra, megjelenik a görgetősáv */
 .gemini-textarea:hover::-webkit-scrollbar-thumb {
-  background: #4b5563; /* Diszkrét szürke szín */
+    background: var(--csb-scrollbar-thumb);
 }
 
 .gemini-textarea:hover::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
 
-/* Placeholder megjelenítése üres állapotban */
-.gemini-textarea:empty:before {
-  content: attr(data-placeholder);
-  color: #757575;
-  pointer-events: none;
-  display: block;
-}
-
-/* A legördülő menü konténere */
 .chat-options-container {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-/* A trigger ikon (plusz gomb) */
 .trigger-icon {
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-  opacity: 0.8;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    opacity: 0.8;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    color: var(--csb-text-secondary);
 }
 
 .trigger-icon:hover {
-  opacity: 1;
+    opacity: 1;
 }
 
-/* A felugró opciók doboza */
 .options-popup {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 0;
-  width: 320px;
-  background-color: #1e1e1e;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  padding: 16px;
-  z-index: 1000;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  animation: fadeIn 0.15s ease-out;
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 0;
+    width: 320px;
+    background-color: var(--csb-bg-primary);
+    border-radius: 16px;
+    box-shadow: var(--csb-shadow-small);
+    padding: 16px;
+    z-index: 1000;
+    border: 1px solid var(--csb-border-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    animation: fadeIn 0.15s ease-out;
 }
 
-/* Fájlfeltöltő sáv */
 .file-upload-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  background-color: rgba(255, 255, 255, 0.04);
-  border-radius: 10px;
-  cursor: pointer;
-  margin-bottom: 12px;
-  transition: background-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background-color: var(--csb-bg-secondary);
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: background-color 0.15s;
 }
 
 .file-upload-row:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+    background-color: var(--csb-hover-bg);
 }
 
 .file-upload-label {
-  font-size: 18px;
-  cursor: pointer;
+    font-size: 18px;
+    cursor: pointer;
 }
 
-/* Címkék szövegei */
 .option-label-text {
-  color: #e3e3e3;
-  font-size: 14px;
-  margin: 0;
-  font-weight: 500;
+    color: var(--csb-text-secondary);
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
 }
 
-/* Textarea szekció */
 .textarea-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
 }
 
 .custom-textarea {
-
-  width: 100%;
-  background-color: #2b2b2b;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #e3e3e3;
-  padding: 10px;
-  font-size: 14px;
-  font-family: inherit;
-  resize: none;
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.15s;
+    width: 100%;
+    background-color: var(--csb-bg-secondary);
+    border: 1px solid var(--csb-border-color);
+    border-radius: 8px;
+    color: var(--csb-text-secondary);
+    padding: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s;
 }
 
 .custom-textarea:focus {
-  border-color: rgba(255, 255, 255, 0.25);
+    border-color: var(--csb-border-secondary);
 }
 
 .custom-textarea::placeholder {
-  color: #757575;
+    color: var(--csb-text-tertiary);
 }
 
-/* Alsó gomb sáv */
 .action-footer {
-  display: flex;
-  justify-content: flex-end;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .apply-btn {
-  background-color: #3b82f6;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.15s;
+    background-color: #3b82f6;
+    color: var(--csb-text-primary);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s;
 }
 
 .apply-btn:hover {
-  background-color: #2563eb;
+    background-color: #2563eb;
 }
 
-/* Animáció a lenyíló ablakhoz */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* A konténer, ami összefogja a fájlokat, ha többet is feltöltesz */
 .file-preview-container {
-  display: flex;
-  flex-direction: column;
-
-  gap: 10px;
-
-  /* Ha a beviteli mező felett van, érdemes egy kis margót adni */
-  margin-bottom: 5px; 
-  overflow-y: auto;
-  max-height: 100px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 5px;
+    overflow-y: auto;
+    max-height: 100px;
 }
 
 .file-preview-container::-webkit-scrollbar {
-  width: 6px;
-}
-.file-preview-container::-webkit-scrollbar-thumb {
-  background-color: #444746;
-  border-radius: 6px;
-}
-.file-preview-container::-webkit-scrollbar-thumb:hover {
-  background-color: #5f6368;
-}
-.file-preview-container::-webkit-scrollbar-track {
-  background: transparent;
+    width: 6px;
 }
 
-/* Egyetlen fájl "pirula" (pill) dizájnja */
+.file-preview-container::-webkit-scrollbar-thumb {
+    background-color: var(--csb-scrollbar-thumb);
+    border-radius: 6px;
+}
+
+.file-preview-container::-webkit-scrollbar-thumb:hover {
+    background-color: var(--csb-scrollbar-hover);
+}
+
+.file-preview-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 .preview-item-wrapper {
-  display: flex;
-  align-items: center;
-  background-color: #2a2a2a; /* A sötét beviteli mezőhöz illeszkedő háttér */
-  border: 1px solid #3f3f46; /* Finom, sötétszürke keret */
-  border-radius: 12px;
-  padding: 6px 10px 6px 12px;
-  color: #e4e4e7;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: border-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    background-color: var(--csb-bg-secondary);
+    border: 1px solid var(--csb-border-secondary);
+    border-radius: 12px;
+    padding: 6px 10px 6px 12px;
+    width: fit-content;
+    color: var(--csb-text-secondary);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    box-shadow: var(--csb-shadow-medium);
+    transition: border-color 0.2s ease;
 }
 
 .preview-item-wrapper:hover {
-  border-color: #52525b; /* Kicsit kivilágosodik a keret, ha ráviszed az egeret */
+    border-color: var(--csb-border-secondary);
 }
 
-/* Maga a tartalom (kép vagy dokumentum) elrendezése */
 .preview-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Kép előnézet formázása */
 .image-preview img {
-  width: 36px;
-  height: 36px;
-  object-fit: cover;
-  border-radius: 6px;
-  background-color: #1a1a1a;
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 6px;
+    background-color: var(--csb-bg-primary);
 }
 
-/* Dokumentum ikon (📄) mérete */
 .doc-preview .file-icon {
-  font-size: 1.2rem;
-  color: #a1a1aa;
+    font-size: 1.2rem;
+    color: var(--csb-text-tertiary);
 }
 
-/* Fájl nevének és méretének elrendezése (egymás alatt) */
 .file-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* Fájlnév: hosszú név esetén pontokkal rövidítve (ellipsis) */
 .file-name {
-  font-size: 0.85rem;
-  font-weight: 500;
-  max-width: 60px; /* Szükség szerint növelhető */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    max-width: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--csb-text-primary);
 }
 
-/* Fájlméret stílusa */
 .file-size {
-  font-size: 0.7rem;
-  color: #888888;
-  margin-top: 2px;
+    font-size: 0.7rem;
+    color: var(--csb-text-tertiary);
+    margin-top: 2px;
 }
 
-/* Törlés gomb (X) formázása */
 .remove-file-btn {
-  background: transparent;
-  border: none;
-  color: #888888;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-left: 8px;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-  line-height: 1;
+    background: transparent;
+    border: none;
+    color: var(--csb-text-tertiary);
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 8px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    line-height: 1;
 }
 
 .remove-file-btn:hover {
-  color: #ff6b6b; /* Pirosra vált hover esetén, jelezve a törlést */
-  background-color: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.1);
 }
-.text-file-wrapper{
 
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 1rem;
-  width: 100%;
+.text-file-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+    width: 100%;
+}
+
+.file-text {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }

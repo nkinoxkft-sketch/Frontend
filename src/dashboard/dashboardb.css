@@ -1,18 +1,257 @@
 /* =========================================
-   Dashboard / Main Chat Area (Gemini Dark Style)
+   Téma változók - Dashboard és Chat (Gemini Style)
+   ========================================= */
+
+/* Alapértelmezett (sötét) téma változók */
+:root {
+  /* Sidebar változók */
+  --csb-bg-primary: #1E1E1E;
+  --csb-bg-secondary: #2D2D2D;
+  --csb-bg-tertiary: #3C4043;
+  --csb-border-color: #2D2D2D;
+  --csb-border-secondary: #3C4043;
+  --csb-text-primary: #E8EAED;
+  --csb-text-secondary: #BDC1C6;
+  --csb-text-tertiary: #9AA0A6;
+  --csb-hover-bg: #2D2D2D;
+  --csb-active-bg: #2D2D2D;
+  --csb-active-border: #3C4043;:root {
+  /* Sidebar változók */
+  --csb-bg-primary: #1E1E1E;
+  --csb-bg-secondary: #2D2D2D;
+  --csb-bg-tertiary: #3C4043;
+  --csb-border-color: #2D2D2D;
+  --csb-border-secondary: #3C4043;
+  --csb-text-primary: #E8EAED;
+  --csb-text-secondary: #BDC1C6;
+  --csb-text-tertiary: #9AA0A6;
+  --csb-hover-bg: #2D2D2D;
+  --csb-active-bg: #2D2D2D;
+  --csb-active-border: #3C4043;
+  --csb-active-text: #E8EAED;
+  --csb-scrollbar-thumb: #3C4043;
+  --csb-scrollbar-hover: #5F6368;
+  --csb-shadow-small: 0 2px 4px rgba(0,0,0,0.3);
+  --csb-shadow-medium: 0 1px 3px rgba(0,0,0,0.1);
+  --csb-icon-filter: invert(1);
+
+  /* Dashboard változók */
+  --cdash-bg-main: #131314;
+  --cdash-text-primary: #e3e3e3;
+  --cdash-text-secondary: #c4c7c5;
+  --cdash-text-tertiary: #8e918f;
+  --cdash-scrollbar-thumb: #444746;
+  --cdash-scrollbar-hover: #5f6368;
+  
+  /* Chat üzenetek változói */
+  --cmsg-bubble-user-bg: #333537;
+  --cmsg-bubble-user-text: #e3e3e3;
+  --cmsg-bubble-claude-bg: #1e1f20;
+  --cmsg-bubble-claude-text: #e3e3e3;
+  --cmsg-bubble-border: #444746;
+  --cmsg-bubble-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --cmsg-hover-bg: #333537;
+  
+  /* Loading/Spinner */
+  --cdash-loading-bg: #1e1f20;
+  --cdash-loading-border: #444746;
+  --cdash-loading-text: #c4c7c5;
+  --cdash-spinner-color: #e3e3e3;
+  
+  /* Attachment/Fájlok */
+  --cmsg-attachment-bg: #1e1f20;
+  --cmsg-attachment-border: #444746;
+  --cmsg-overlay-bg: rgba(0, 0, 0, 0.75);
+  --cmsg-doc-icon-color: #c4c7c5;
+  
+  /* Empty state */
+  --empty-gradient-start: #00c6ff;
+  --empty-gradient-end: #0072ff;
+  --empty-text-muted: #888888;
+  --empty-icon-shadow: rgba(0, 198, 255, 0.2);
+}
+
+/* =========================================
+   Világos téma változók
+   ========================================= */
+
+
+[data-theme="light"] {
+  /* Sidebar változók - világos */
+  --csb-bg-primary: #FFFFFF;
+  --csb-bg-secondary: #F8F9FA;
+  --csb-bg-tertiary: #F1F3F4;
+  --csb-border-color: #E8EAED;
+  --csb-border-secondary: #DADCE0;
+  --csb-text-primary: #202124;
+  --csb-text-secondary: #5F6368;
+  --csb-text-tertiary: #5F6368;
+  --csb-hover-bg: #F1F3F4;
+  --csb-active-bg: #E8F0FE;
+  --csb-active-border: #D2E3FC;
+  --csb-active-text: #1A73E8;
+  --csb-scrollbar-thumb: #DADCE0;
+  --csb-scrollbar-hover: #BDC1C6;
+  --csb-shadow-small: 0 1px 3px rgba(0,0,0,0.15);
+  --csb-shadow-medium: 0 1px 3px rgba(0,0,0,0.1);
+  --csb-icon-filter: invert(0);
+
+  /* Dashboard változók - világos */
+  --cdash-bg-main: #F8F9FA;
+  --cdash-text-primary: #202124;
+  --cdash-text-secondary: #5F6368;
+  --cdash-text-tertiary: #80868B;
+  --cdash-scrollbar-thumb: #DADCE0;
+  --cdash-scrollbar-hover: #BDC1C6;
+  
+  /* Chat üzenetek változói - világos */
+  --cmsg-bubble-user-bg: #E8F0FE;
+  --cmsg-bubble-user-text: #041E49;
+  --cmsg-bubble-claude-bg: #FFFFFF;
+  --cmsg-bubble-claude-text: #202124;
+  --cmsg-bubble-border: #E8EAED;
+  --cmsg-bubble-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --cmsg-hover-bg: #F1F3F4;
+  
+  /* Loading/Spinner - világos */
+  --cdash-loading-bg: #FFFFFF;
+  --cdash-loading-border: #E8EAED;
+  --cdash-loading-text: #5F6368;
+  --cdash-spinner-color: #1A73E8;
+  
+  /* Attachment/Fájlok - világos */
+  --cmsg-attachment-bg: #FFFFFF;
+  --cmsg-attachment-border: #E8EAED;
+  --cmsg-overlay-bg: rgba(0, 0, 0, 0.6);
+  --cmsg-doc-icon-color: #5F6368;
+  
+  /* Empty state - világos */
+  --empty-gradient-start: #1A73E8;
+  --empty-gradient-end: #0D47A1;
+  --empty-text-muted: #5F6368;
+  --empty-icon-shadow: rgba(26, 115, 232, 0.2);
+}
+
+  --csb-active-text: #E8EAED;
+  --csb-scrollbar-thumb: #3C4043;
+  --csb-scrollbar-hover: #5F6368;
+  --csb-shadow-small: 0 2px 4px rgba(0,0,0,0.3);
+  --csb-shadow-medium: 0 1px 3px rgba(0,0,0,0.1);
+  --csb-icon-filter: invert(1);
+
+  /* Dashboard változók */
+  --cdash-bg-main: #131314;
+  --cdash-text-primary: #e3e3e3;
+  --cdash-text-secondary: #c4c7c5;
+  --cdash-text-tertiary: #8e918f;
+  --cdash-scrollbar-thumb: #444746;
+  --cdash-scrollbar-hover: #5f6368;
+  
+  /* Chat üzenetek változói */
+  --cmsg-bubble-user-bg: #333537;
+  --cmsg-bubble-user-text: #e3e3e3;
+  --cmsg-bubble-claude-bg: #1e1f20;
+  --cmsg-bubble-claude-text: #e3e3e3;
+  --cmsg-bubble-border: #444746;
+  --cmsg-bubble-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --cmsg-hover-bg: #333537;
+  
+  /* Loading/Spinner */
+  --cdash-loading-bg: #1e1f20;
+  --cdash-loading-border: #444746;
+  --cdash-loading-text: #c4c7c5;
+  --cdash-spinner-color: #e3e3e3;
+  
+  /* Attachment/Fájlok */
+  --cmsg-attachment-bg: #1e1f20;
+  --cmsg-attachment-border: #444746;
+  --cmsg-overlay-bg: rgba(0, 0, 0, 0.75);
+  --cmsg-doc-icon-color: #c4c7c5;
+  
+  /* Empty state */
+  --empty-gradient-start: #00c6ff;
+  --empty-gradient-end: #0072ff;
+  --empty-text-muted: #888888;
+  --empty-icon-shadow: rgba(0, 198, 255, 0.2);
+}
+
+/* =========================================
+   Világos téma változók
+   ========================================= */
+
+
+[data-theme="light"] {
+  /* Sidebar változók - világos */
+  --csb-bg-primary: #FFFFFF;
+  --csb-bg-secondary: #F8F9FA;
+  --csb-bg-tertiary: #F1F3F4;
+  --csb-border-color: #E8EAED;
+  --csb-border-secondary: #DADCE0;
+  --csb-text-primary: #202124;
+  --csb-text-secondary: #5F6368;
+  --csb-text-tertiary: #5F6368;
+  --csb-hover-bg: #F1F3F4;
+  --csb-active-bg: #E8F0FE;
+  --csb-active-border: #D2E3FC;
+  --csb-active-text: #1A73E8;
+  --csb-scrollbar-thumb: #DADCE0;
+  --csb-scrollbar-hover: #BDC1C6;
+  --csb-shadow-small: 0 1px 3px rgba(0,0,0,0.15);
+  --csb-shadow-medium: 0 1px 3px rgba(0,0,0,0.1);
+  --csb-icon-filter: invert(0);
+
+  /* Dashboard változók - világos */
+  --cdash-bg-main: #F8F9FA;
+  --cdash-text-primary: #202124;
+  --cdash-text-secondary: #5F6368;
+  --cdash-text-tertiary: #80868B;
+  --cdash-scrollbar-thumb: #DADCE0;
+  --cdash-scrollbar-hover: #BDC1C6;
+  
+  /* Chat üzenetek változói - világos */
+  --cmsg-bubble-user-bg: #E8F0FE;
+  --cmsg-bubble-user-text: #041E49;
+  --cmsg-bubble-claude-bg: #FFFFFF;
+  --cmsg-bubble-claude-text: #202124;
+  --cmsg-bubble-border: #E8EAED;
+  --cmsg-bubble-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --cmsg-hover-bg: #F1F3F4;
+  
+  /* Loading/Spinner - világos */
+  --cdash-loading-bg: #FFFFFF;
+  --cdash-loading-border: #E8EAED;
+  --cdash-loading-text: #5F6368;
+  --cdash-spinner-color: #1A73E8;
+  
+  /* Attachment/Fájlok - világos */
+  --cmsg-attachment-bg: #FFFFFF;
+  --cmsg-attachment-border: #E8EAED;
+  --cmsg-overlay-bg: rgba(0, 0, 0, 0.6);
+  --cmsg-doc-icon-color: #5F6368;
+  
+  /* Empty state - világos */
+  --empty-gradient-start: #1A73E8;
+  --empty-gradient-end: #0D47A1;
+  --empty-text-muted: #5F6368;
+  --empty-icon-shadow: rgba(26, 115, 232, 0.2);
+}
+
+/* =========================================
+   Dashboard / Main Chat Area (Témaváltható)
    Előtag: cdash-
    ========================================= */
+
 
 .cdash-screen {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background-color: #131314; /* Mély éjszakai háttér (Gemini stílus) */
+  background-color: var(--cdash-bg-main);
   overflow: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #e3e3e3; /* Általános világos szövegszín */
+  color: var(--cdash-text-primary);
   position: relative;
-
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .cdash-main-workspace {
@@ -22,9 +261,8 @@
   position: relative;
   padding: 1rem;
   overflow: auto;
+  overflow-x: hidden;
 }
-
-
 
 /* Üzenetek területe */
 .cdash-chat-history {
@@ -35,19 +273,22 @@
   gap: 24px;
   scroll-behavior: smooth;
   overscroll-behavior: contain;
-  background-color: #131314;
+  background-color: var(--cdash-bg-main);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease;
 }
 
-/* Görgetősáv formázása (sötét módhoz) */
+/* Görgetősáv formázása */
 .cdash-chat-history::-webkit-scrollbar {
   width: 6px;
 }
 .cdash-chat-history::-webkit-scrollbar-thumb {
-  background-color: #444746;
+  background-color: var(--cdash-scrollbar-thumb);
   border-radius: 6px;
+  transition: background-color 0.2s;
 }
 .cdash-chat-history::-webkit-scrollbar-thumb:hover {
-  background-color: #5f6368;
+  background-color: var(--cdash-scrollbar-hover);
 }
 .cdash-chat-history::-webkit-scrollbar-track {
   background: transparent;
@@ -65,18 +306,19 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: #1e1f20; /* Sötét kártya háttér */
+  background-color: var(--cdash-loading-bg);
   padding: 12px 18px;
   border-radius: 12px;
-  border: 1px solid #444746; /* Finom keret */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--cdash-loading-border);
+  box-shadow: var(--cmsg-bubble-shadow);
   width: fit-content;
+  transition: all 0.3s ease;
 }
 
 .cdash-spinner {
   width: 20px;
   height: 20px;
-  color: #e3e3e3; /* Világos pörgő */
+  color: var(--cdash-spinner-color);
   animation: cdash-spin 1.2s linear infinite;
 }
 
@@ -87,13 +329,14 @@
 .cdash-loading-text {
   font-size: 14px;
   font-weight: 600;
-  color: #c4c7c5;
+  color: var(--cdash-loading-text);
   letter-spacing: 0.3px;
+  transition: color 0.3s ease;
 }
 
 /* Szövegbeviteli terület (Alul) */
 .cdash-input-area {
-  padding: 0 24px 24px 24px;
+  padding: 0 12px 24px 12px;
   background: transparent;
   display: flex;
   justify-content: center;
@@ -108,7 +351,7 @@
 }
 
 /* =========================================
-   Chat Message Bubbles (Gemini Dark Style)
+   Chat Message Bubbles (Témaváltható)
    Előtag: cmsg-
    ========================================= */
 
@@ -133,26 +376,28 @@
   gap: 12px;
 }
 
-/* Felhasználó buborékja (Lágy, de észrevehető kontraszt) */
+/* Felhasználó buborékja */
 .cmsg-bubble-user {
-  background-color: #333537; /* Kicsit világosabb a háttérnél */
-  color: #e3e3e3;
+  background-color: var(--cmsg-bubble-user-bg);
+  color: var(--cmsg-bubble-user-text);
   padding: 14px 18px;
   border-radius: 16px 16px 4px 16px;
   font-size: 15px;
   line-height: 1.5;
+  transition: all 0.3s ease;
 }
 
-/* Claude buborékja (Visszafogott, tiszta sötétszürke kártya) */
+/* Claude buborékja */
 .cmsg-bubble-claude {
-  background-color: #1e1f20; /* Jól elkülönül a #131314 háttértől */
-  color: #e3e3e3;
+  background-color: var(--cmsg-bubble-claude-bg);
+  color: var(--cmsg-bubble-claude-text);
   padding: 20px 24px;
   border-radius: 16px 16px 16px 4px;
-  border: 1px solid #444746; /* Elegáns szürke keret */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--cmsg-bubble-border);
+  box-shadow: var(--cmsg-bubble-shadow);
   font-size: 15px;
   line-height: 1.6;
+  transition: all 0.3s ease;
 }
 
 /* Csatolt fájlok konténere */
@@ -167,9 +412,10 @@
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #444746;
-  background-color: #1e1f20;
+  border: 1px solid var(--cmsg-attachment-border);
+  background-color: var(--cmsg-attachment-bg);
   max-width: 250px;
+  transition: all 0.3s ease;
 }
 
 /* Kép előnézet */
@@ -189,14 +435,17 @@
 
 .cmsg-file-name-overlay {
   position: absolute;
-  bottom: 0; left: 0; right: 0;
-  background: rgba(0, 0, 0, 0.75); /* Sötétebb áttetsző réteg */
+  bottom: 0; 
+  left: 0; 
+  right: 0;
+  background: var(--cmsg-overlay-bg);
   color: #ffffff;
   font-size: 11px;
   padding: 6px 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: background 0.3s ease;
 }
 
 /* Dokumentum előnézet */
@@ -213,12 +462,13 @@
 
 .cmsg-doc-preview:hover,
 .cmsg-doc-link:hover {
-  background-color: #333537; /* Finom világosodás hover-re */
+  background-color: var(--cmsg-hover-bg);
 }
 
 .cmsg-doc-icon {
   font-size: 24px;
-  color: #c4c7c5; /* Visszafogott ikon szín */
+  color: var(--cmsg-doc-icon-color);
+  transition: color 0.3s ease;
 }
 
 .cmsg-doc-info {
@@ -230,15 +480,17 @@
 .cmsg-doc-name {
   font-size: 13px;
   font-weight: 600;
-  color: #e3e3e3;
+  color: var(--cdash-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: color 0.3s ease;
 }
 
 .cmsg-doc-size {
   font-size: 11px;
-  color: #8e918f; /* Halványabb szürke a másodlagos infónak */
+  color: var(--cdash-text-tertiary);
+  transition: color 0.3s ease;
 }
 
 /* Markdown Formázás */
@@ -258,15 +510,16 @@
   margin-bottom: 4px;
 }
 
-/* Ez a konténer kitölti a rendelkezésre álló teres a sidebar mellett */
+/* Empty Chat State */
 .empty-chat-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Vagy amekkora a chat ablakod magassága (pl. 100%) */
+  height: 100%;
   width: 100%;
-  background-color: #131314 !important;
+  background-color: var(--cdash-bg-main) !important;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  transition: background-color 0.3s ease;
 }
 
 .empty-state-content {
@@ -274,37 +527,37 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Finom belépő animáció betöltéskor */
   animation: fadeUpIn 1s ease-out forwards;
 }
 
 .logo-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
-  /* Folyamatos, lassú lebegő animáció */
   animation: float 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(0, 198, 255, 0.2));
+  filter: drop-shadow(0 0 20px var(--empty-icon-shadow));
+  transition: filter 0.3s ease;
 }
 
 .brand-name {
   font-size: 3rem;
   font-weight: 800;
   margin: 0;
-  /* Modern kék-cián színátmenet a szövegen */
-  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+  background: linear-gradient(135deg, var(--empty-gradient-start) 0%, var(--empty-gradient-end) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
   letter-spacing: 1px;
+  transition: all 0.3s ease;
 }
 
 .welcome-text {
-  color: #888888;
+  color: var(--empty-text-muted);
   font-size: 1.1rem;
   margin-top: 1.5rem;
   max-width: 400px;
   line-height: 1.6;
+  transition: color 0.3s ease;
 }
 
 /* --- Animációk (Keyframes) --- */
@@ -330,4 +583,29 @@
   100% {
     transform: translateY(0px);
   }
+}
+
+/* Message Summary */
+.msg-summary-closed {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.msg-summary-open {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: right;
+}
+
+.msg-summary-btn {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.msg-summary-btn:hover {
+  background-color: var(--cmsg-hover-bg);
+  border-radius: 10px;
 }

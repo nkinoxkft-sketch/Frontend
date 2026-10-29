@@ -1,4 +1,4 @@
-import { useState,  useEffect, useRef, useLayoutEffect } from 'react';
+import { useState,  useEffect, useRef } from 'react';
 
 import './dashboardb.css';
 import ReactMarkdown from 'react-markdown';
@@ -9,35 +9,39 @@ import { Bar } from './dashboard_bar';
 import React from 'react';
 import { CodeBlock } from './code';
 import { LoadingBar } from '../Loading/Loading';
+import { BackendError } from '../errors';
 export const Dashboard = () =>{
   
-  const selected_session_id = useRef(null);
-  const limit = useRef(5);
-  const loading_prev_messages = useRef(false);
-  const getting_messages = useRef(false);
 
   const [responseText, setResponseText] = useState([]);
   const [isLoadingResponseText, setIsLoadingResponseText] = useState(false);
-  const [isLoadingPrevText, setIsLoadingPrevText] = useState(false);
 
   const contentRef = useRef(null);
+
   const previousScrollHeightRef = useRef(null);
 
-  const no_more_message_to_load = useRef(false);
+  const [ onSelectSessionId, setOnSelectSessionId ] = useState(null);
 
-  const forceScrollRef = useRef(false);
+  const [ isLoadingMessages, setIsLoadingMessages ] = useState(false);
 
-  const getMessages = async () =>{
+  const isLoadingPrevMessages = useRef(false);
+
+  const isMoreToLoad = useRef(true);
+
+  const offset = useRef(5);
+
+  const getMessages = async ( loadMoreMessages = false) =>{
     
-    //console.log('getmessage')
     try{
 
-      if(isLoadingResponseText){ return }
+      if(isLoadingMessages || !onSelectSessionId){ return }
+
+      setIsLoadingMessages(true);
 
       const response = await api.get('/getMessages', {
         params: { 
-          session_id: selected_session_id.current, 
-          limit: Number(limit.current),
+          session_id: onSelectSessionId, 
+          limit: Number(offset.current),
         },
 
       });
@@ -46,7 +50,7 @@ export const Dashboard = () =>{
 
       if(data.length < 5){
 
-        no_more_message_to_load.current = true
+        isMoreToLoad.current = false
 
       }
     
@@ -72,7 +76,7 @@ export const Dashboard = () =>{
               type = 'image'
 
             }
-            else if(['txt'].includes(ext)){
+            else if(['txt', 'pdf'].includes(ext)){
 
               type = 'txt'
 
@@ -91,17 +95,14 @@ export const Dashboard = () =>{
         
 
       } 
-      //console.log(loading_prev_messages.current, 'prev')
-      if(loading_prev_messages.current){
 
-        console.log('prev')
+      if(loadMoreMessages){
 
         setResponseText(prev => [...formattedMessages, ...prev]);
 
       }
       else{ 
-        console.log('sima')
-
+      
         setResponseText(formattedMessages);
 
       }
@@ -113,120 +114,117 @@ export const Dashboard = () =>{
     }
     finally{
 
-      setIsLoadingResponseText(false);
-      setIsLoadingPrevText(false);
+      setIsLoadingMessages(false);
 
     }
     
   };
 
-  
+  useEffect(() =>{
 
+    if(onSelectSessionId && !isLoadingResponseText){
 
-
-  useLayoutEffect(() => {
-
-    const container = contentRef.current;
-
-    if (!container) return;
-
-    if(loading_prev_messages.current){
-
-      loading_prev_messages.current = false;
-
-      const heightDifference = container.scrollHeight - previousScrollHeightRef.current;
-
-      container.scrollTo({
-        top: heightDifference,
-        behavior: 'instant'
-      });
-
+      offset.current = 5;
+      isMoreToLoad.current = true
+      void getMessages();
 
     }
-    else if(forceScrollRef.current || getting_messages.current){
+    else if(!isLoadingResponseText){
 
-      container.scrollTo({
-        top: container.scrollHeight,
-        behavior: 'instant'
-      });
-
-      forceScrollRef.current = false;
-      getting_messages.current = false;
+      offset.current = 5;
+      isMoreToLoad.current = true
+      setResponseText([]);
 
     }
-    
-    
-    console.log('response text', responseText.length, responseText)
-    
-  }, [responseText]);
+
+    setBackendError('')
+
+
+  }, [onSelectSessionId])
 
   useEffect(() => {
 
     const container = contentRef.current;
 
-    if (!container) return; 
+    if (!container) return;
 
-    const handleScroll = () => {
-      //console.log(container.scrollTop, container.scrollHeight, loading_prev_messages.current, no_more_message_to_load.current)
-      if (container.scrollTop <= 10 && !no_more_message_to_load.current &&  !loading_prev_messages.current, isLoadingResponseText) {
+    if(isLoadingPrevMessages.current){
 
-        limit.current += 5;
+      isLoadingPrevMessages.current = false;
 
-        previousScrollHeightRef.current = container.scrollHeight;
+      const heightDifference = container.scrollHeight - previousScrollHeightRef.current;
+      
+      container.scrollTo({
+        top: heightDifference,
+        behavior: 'instant'
+      });
 
-        loading_prev_messages.current = true;
+    }else {
 
-        console.log('loading', limit.current)
+      if (responseText.length === 0) return;
 
-        void getMessages();
+      const lastMessage = responseText[responseText.length - 1];
+      console.log(offset.current)
+      if (lastMessage.sender === 'user' || offset.current === 5) {
+
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: 'instant'
+        });
 
       }
-    
-      if(container.scrollTop + container.clientHeight <= container.scrollHeight - 10){
 
-        container.classList.add('fade-effect-bottom')
+    }
 
-      }
-      else{
 
-        container.classList.remove('fade-effect-bottom')
+  }, [responseText]);
 
-      }
-    };
+
+  const handleScroll = () => {
+
+    const container = contentRef.current;
+
+    if(!container) return
+
+
+
+    if (container.scrollTop <= 10 && isMoreToLoad.current && !isLoadingPrevMessages.current) {
+
+      offset.current += 5;
+
+      isLoadingPrevMessages.current = true;
+
+      previousScrollHeightRef.current = container.scrollHeight;
+
+      void getMessages(true);
+
+    }
+
+  }
+
+
+  const [ backendError, setBackendError ] = useState('');
   
-    container.addEventListener('scroll', handleScroll);
-
-
-    return () => {
-      container.removeEventListener('scroll', handleScroll);
-    };
-  }, [isLoadingResponseText, isLoadingPrevText]);
 
   return(
 
     <div className="cdash-screen">
-      {isLoadingPrevText && (
+      {isLoadingMessages && (
 
         <LoadingBar/>
 
       )}
     <Bar 
-        isLoadingResponseText={isLoadingResponseText} 
-        selected_session_id={selected_session_id}
-        limit={limit}
-        getMessages={getMessages} 
-        no_more_message_to_load={no_more_message_to_load}
-        getting_messages={getting_messages}
-        setIsLoadingPrevText={setIsLoadingPrevText}
-        isLoadingPrevText={isLoadingPrevText}
-        setResponseText={setResponseText}
 
+      isLoadingResponseText={isLoadingResponseText}
+      setOnSelectSessionId={setOnSelectSessionId}
+      onSelectSessionId={onSelectSessionId}
     />
 
     <div className="cdash-main-workspace">
 
         {/* Chat Előzmények / Üzenetek (Ez került felülre) */}
-        <div className="cdash-chat-history" ref={contentRef}>
+        <div className="cdash-chat-history" ref={contentRef} onScroll={handleScroll}>
 
             {responseText.length === 0 && (
               <div className="empty-chat-container">
@@ -237,8 +235,11 @@ export const Dashboard = () =>{
                 </div>
               </div>
             )}
+            
             {responseText.map((msg, index) => (
-                <ChatMessage key={index} msg={msg} />
+
+                <ChatMessage  isLoadingResponseText={isLoadingResponseText} key={index} msg={msg} backendError={backendError} />
+
             ))}
             
             {isLoadingResponseText && (
@@ -259,17 +260,19 @@ export const Dashboard = () =>{
                     </div>
                 </div>
             )}
+            <BackendError error={backendError}/>
         </div>
 
         {/* Szövegbeviteli mező (Ez került alulra) */}
         <div className="cdash-input-area">
             <Textarea 
-                selected_session_id={selected_session_id} 
-                limit={limit} 
-                setResponseText={setResponseText} 
-                setIsLoading={setIsLoadingResponseText} 
+                onSelectSessionId={onSelectSessionId} 
                 isLoadingResponseText={isLoadingResponseText}
-                forceScrollRef={forceScrollRef}
+                offset={offset}
+                setIsLoadingResponseText={setIsLoadingResponseText}
+                setResponseText={setResponseText}
+                setOnSelectSessionId={setOnSelectSessionId}
+                setBackendError={setBackendError}
 
             />
         </div>
@@ -280,86 +283,75 @@ export const Dashboard = () =>{
 }
 
 export function GeminiPromptAccordion({ promptText }) {
-  // Opcionálisan levághatod a szöveget az első 1-2 sorra, ha zárva van, 
-  // de a `<details>` miatt az egész benne lehet, csak a CSS-sel elrejthetjük a felesleget, 
-  // vagy megadhatsz egy rövidített leírást is.
-  if(!promptText){
-    return (<div></div>)
-  }
-  const previewText = promptText.length > 100 ? promptText.slice(0, 100) + '...' : promptText;
-
-  const [islarge, setIslarge] = useState(false);
-
-  useEffect(() => {
-
-    if(promptText.length > 100){
-
-      setIslarge(true);
-
+    if (!promptText) {
+        return (<div></div>);
     }
-  
-  }, []);
 
+    // 1. Azonnal kiszámoljuk, hogy túl hosszú-e (nincs szükség useEffect-re)
+    const isLarge = promptText.length > 100;
+    const previewText = isLarge ? promptText.slice(0, 100) + '...' : promptText;
 
-  return (
-    <details className="group my-2 text-[#e3e3e3] text-base leading-relaxed transition-all">
-      {/* A fejléc: nincs keret, nincs háttér, csak a szöveg és egy diszkrét nyíl */}
-      <summary 
-        onClick={(e) => {
-          if (!islarge) e.preventDefault();
-        }}
-        // Itt adtuk hozzá a list-none és a webkit elrejtő osztályokat:
-        className={`list-none [&::-webkit-details-marker]:hidden summ flex items-start justify-between gap-3 py-2 transition-colors ${
-          islarge 
-            ? "cursor-pointer group-hover:text-white" 
-            : "cursor-default pointer-events-none"
-        }`}
-      >
-        <div className="flex-1">
-          {/* Zárt állapotban a preview vagy rövidített szöveg látszik, nyitva eltűnik ez a blokk */}
-          <span className="maxw block group-open:hidden text-[#c4c7c5]">
-            {previewText}
-          </span>
-          {/* Nyitott állapotban pedig az egész teljes szöveg látszik a fejléc részeként is */}
-          <span className="maxw hidden group-open:block whitespace-pre-wrap">
-            {promptText}
-          </span>
+    // 2. Csak az isOpen state marad meg
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className='msg-summary'>
+            {(isLarge && !isOpen) && (
+                <div className='msg-summary-closed'>
+                    {previewText}
+                    <button className='msg-summary-btn' onClick={() => setIsOpen(true)}>
+                        <svg 
+                        className="w-4 h-4 text-current shrink-0" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor" 
+                        strokeWidth={2}
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                </div>
+            )}
+
+            {(!isLarge || isOpen) && (
+                <div className='msg-summary-open'>
+                    {promptText}
+                    {isLarge && (
+                        <button className='msg-summary-btn' onClick={() => setIsOpen(false)}>
+                            <svg 
+                            className="w-4 h-4 text-current shrink-0" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor" 
+                            strokeWidth={2}
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                            </svg>
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
-        
-        {/* Diszkrét nyíl ikon jobbra */}
-        {islarge && (
-          <div>
-            <svg 
-            className="w-4 h-4 text-gray-400 mt-1 transition-transform duration-200 group-open:rotate-180 shrink-0" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-          </div>
-        )}
-        
-      </summary>
-
-      {/* Ha hosszabb a szöveg, a lenyíló részben biztosítjuk, hogy a teljes tartalom olvasható legyen */}
-      <div className="group-open:block hidden pt-2 pb-3 text-[#c4c7c5] whitespace-pre-wrap text-sm">
-        {/* Itt már teljes terjedelmében ott van */}
-      </div>
-    </details>
-  );
+    );
 }
 
-export const ChatMessage = React.memo(({ msg }) => {
+export const ChatMessage = React.memo(({ msg, isLoadingResponseText}) => {
+
+
+  
+
   return (
-    
+
          <div className={`cmsg-row cmsg-row-${msg.sender}`}>
-            <div className={`cmsg-bubble cmsg-bubble-${msg.sender}`}>
-                
+   
+            {((msg.text && msg.text.length !== 0) || msg.file || msg.backend_file) && (
+              <div className={`cmsg-bubble cmsg-bubble-${msg.sender}`}>
+
                 {/* Felhasználó szövege */}
+
                 {msg.sender === 'user' && (
                     <div className="cmsg-user-content">
-                        {msg.text !== 'file processing' && (
+                        {(msg.text !== 'file processing') && (
                             <GeminiPromptAccordion promptText={msg.text}/>
                         )}
                     </div>
@@ -420,7 +412,9 @@ export const ChatMessage = React.memo(({ msg }) => {
 
                 {/* Csatolt fájlok (Backend - TXT/Doc) */}
                 {msg.backend_file && msg.backend_file.type === 'txt' && (
+                  
                     <div className="cmsg-attachments-container">
+                   
                         <div className="cmsg-attachment-item">
                             <a 
                                 href={msg.backend_file.url} 
@@ -439,7 +433,9 @@ export const ChatMessage = React.memo(({ msg }) => {
               
                 {/* Claude Markdown Válasza */}
                 {msg.sender === 'claude' && (
+                    
                     <div className="cmsg-markdown-content">
+                        
                         <ReactMarkdown
                             remarkPlugins={[remarkGfm]}
                             components={{
@@ -454,6 +450,7 @@ export const ChatMessage = React.memo(({ msg }) => {
                                             <CodeBlock
                                                 language={match ? match[1] : 'text'}
                                                 code={codeString}
+                                                isLoading={isLoadingResponseText}
                                                 {...props}
                                             />
                                         );
@@ -476,11 +473,17 @@ export const ChatMessage = React.memo(({ msg }) => {
                 )}
 
             </div>
+            
+            )}
+            
           </div>
             );
           }, (prevProps, nextProps) => {
+            
             // ITT A LÉNYEG: Ezt a feltételt kötelező megadni a memo-nak, 
             // hogy ne renderelje újra a már kész üzeneteket!
             return prevProps.msg.text === nextProps.msg.text && 
-                  prevProps.msg.isComplete === nextProps.msg.isComplete;
+                  prevProps.msg.isComplete === nextProps.msg.isComplete && 
+    prevProps.isLoadingResponseText === nextProps.isLoadingResponseText &&
+    prevProps.backendError === nextProps.backendError;
 });

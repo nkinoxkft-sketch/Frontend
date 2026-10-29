@@ -36,13 +36,13 @@ body {
 
 .dash-bg{
 
-  background-color:#131314 ;
+  background-color: var(--cdash-bg-main);
   
 }
 .mainPage{
 
   background-color: var(--bg-paper);
-  overflow-y: hidden;
+
 
 
 }
@@ -333,7 +333,7 @@ scrollbar-width: none;
 
 .subFeatures li::before {
 
-    content: '—';
+    content: '\2713';
     color: #D97757;
     margin-right: 12px;
     font-weight: bold;

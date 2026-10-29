@@ -31,7 +31,7 @@ export default function ModelDropdown( {selectedModel, setSelectedModel} ) {
           >
             <span className="checkmark">{selectedModel === 'Haiku' && '✓'}</span>
             <div className="item-text">
-              <div className="item-title">Haiku 4.5</div>
+              <div className="item-title">Haiku 5.5</div>
             </div>
           </div>
 
@@ -41,7 +41,7 @@ export default function ModelDropdown( {selectedModel, setSelectedModel} ) {
           >
             <span className="checkmark">{selectedModel === 'Sonnet' && '✓'}</span>
             <div className="item-text">
-              <div className="item-title">Sonnet 5</div>
+              <div className="item-title">Sonnet 5.5</div>
             </div>
           </div>
 
@@ -51,7 +51,16 @@ export default function ModelDropdown( {selectedModel, setSelectedModel} ) {
           >
             <span className="checkmark">{selectedModel === 'Opus' && '✓'}</span>
             <div className="item-text">
-              <div className="item-title">Opus 5</div>
+              <div className="item-title">Opus 5.5</div>
+            </div>
+          </div>
+          <div 
+            className={`dropdown-item ${selectedModel === 'Fable' ? 'selected' : ''}`}
+            onClick={() => { setSelectedModel('Fable'); setIsOpen(false); }}
+          >
+            <span className="checkmark">{selectedModel === 'Fable' && '✓'}</span>
+            <div className="item-text">
+              <div className="item-title">Fable 5.1</div>
             </div>
           </div>
 

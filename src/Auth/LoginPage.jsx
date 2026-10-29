@@ -55,7 +55,11 @@ export const LoginPage = () =>{
 
         email: data.email, password: data.password, cloud: data['cf']
 
-      });
+      }, { withCredentials: true});
+
+      console.log('succe login');
+
+      console.log(response);
 
       setAccessToken(response.data.token)
 
@@ -67,6 +71,8 @@ export const LoginPage = () =>{
 
 
     }catch(err){
+
+      console.log('error');
 
       setPassText(true);
 
@@ -99,7 +105,7 @@ export const LoginPage = () =>{
     register('cf');
     if (window.turnstile && turnstileRef.current && !widgetId.current) {
       widgetId.current = window.turnstile.render(turnstileRef.current, {
-        sitekey: '0x4AAAAAAFm1riUeYFvJMDTX',
+        sitekey: import.meta.env.VITE_SITE,
         callback: (token) => {
           setValue('cf', token, { shouldValidate: true, shouldDirty: true });
         },
@@ -124,7 +130,9 @@ export const LoginPage = () =>{
                 // Fontos: a custom hook 'access_token'-t ad vissza, nem 'credential'-t!
                 const response = await axios.post('/api/google-login', {
                     token: tokenResponse.access_token 
-                });
+                },
+                
+                { withCredentials: true});
 
                 setAccessToken(response.data.token);
                 setIsLogedIn(true);

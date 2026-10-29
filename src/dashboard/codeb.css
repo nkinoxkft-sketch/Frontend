@@ -11,6 +11,8 @@
   background-color: #1E1E1E;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   position: relative;
+
+
 }
 
 /* Fejléc sáv */
@@ -26,6 +28,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
+  border-radius: 10px;
 }
 
 /* Nyelv megnevezése */
@@ -156,4 +159,10 @@
 
 .ccode-variable {
   color: #F28B82; /* Piros/rózsaszín - változók */
+}
+
+
+.ccode-wrapper {
+  scrollbar-width: thin; /* Vékonyabb, elegánsabb sáv */
+  scrollbar-color: #4a5568 rgb(45,45, 45); /* [csúszka színe] [háttérszín] */
 }

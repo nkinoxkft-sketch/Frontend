@@ -4,7 +4,11 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { nord, dracula, nightOwl, kimbieDark,  } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import './codeb.css';
-export function CodeBlock({ language, code, ...props }) {
+export function CodeBlock({language, code, isLoading,  ...props  }) {
+
+  
+  
+
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -58,10 +62,11 @@ export function CodeBlock({ language, code, ...props }) {
       padding: '16px',
       fontSize: '14px',
       backgroundColor: '#2D2D2D', /* Hófehér háttér */
-      overflowX: 'auto',
-      overflowY: 'hidden'
+      overflowY: 'hidden',
+      overflowX: isLoading ? 'hidden' : 'auto',
     }}
   >
+    
     {code}
   </SyntaxHighlighter>
 </div>

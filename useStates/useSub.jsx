@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { api, isAccessToken } from '../src/interceptor';
+import { api } from '../src/interceptor';
 import { useAuth } from '../src/main';
 const getSubData = async () =>{
     

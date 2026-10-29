@@ -27,9 +27,10 @@ function App() {
   const [ isVisibleNav, setIsVisibleNav ] = useState(false);
 
   const loc = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
+
+    console.log(import.meta.env.VITE_PAYPAL_CLIENT_ID)
 
     if (loc.state?.scrollToSubscriptions) {
      

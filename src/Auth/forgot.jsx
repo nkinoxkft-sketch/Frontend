@@ -50,7 +50,7 @@ export const ResetPage = () =>{
 
     try {
 
-      const response = await api.post('/api/reset-password', {
+      const response = await api.post('/reset-password', {
         password: dataInput.password,
       });
 

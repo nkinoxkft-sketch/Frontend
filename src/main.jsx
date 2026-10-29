@@ -8,8 +8,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const queryClient = new QueryClient();
 
-import { createContext, useState, useContext, useEffect } from 'react';
-import { setOnUnauthorized } from './interceptor.jsx'
+import { createContext, useState, useContext } from 'react';
+
 import { useMemo } from 'react'
 const AuthContext = createContext();
 

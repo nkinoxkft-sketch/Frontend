@@ -8,38 +8,27 @@ import { Shield } from '../Shield/Shield';
 import { ProfilCard } from '../Profil/ProfilCard';
 import { useNavigate } from 'react-router-dom';
 import opensvg from '../assets/open.svg'
-import { useAuth } from '../main';
-import { api } from '../interceptor';
-import { LoadingBar, LoadingSpinner } from '../Loading/Loading';
-export const Bar = ( { getMessages, isLoadingResponseText, isLoadingPrevText, setIsLoadingPrevText, selected_session_id, limit, no_more_message_to_load, getting_messages, setResponseText }) =>{
+import { LoadingBar } from '../Loading/Loading';
+import { useSession } from '../../useStates/useSession';
 
-    const setNewTab = () =>{
-        
-        console.log('newTab')
-        no_more_message_to_load.current = true;
-        limit.current = 5;
-        selected_session_id.current = null;
-        setCurrentSessionId(null);
-        setResponseText([])
+export const Bar = ( { isLoadingResponseText, setOnSelectSessionId, onSelectSessionId  }) =>{
 
-    }
+    const { sub } = useSub();  
 
-    const [ currentSessionId, setCurrentSessionId ] = useState(null);
-
-    const { sub } = useSub();
+    const navRef = useRef(null);
 
     const [navVisible, setNavVisible] = useState(true);
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const [windowSize, setWindowSize] = useState({
+    const [ windowSize ] = useState({
+
         width: window.innerWidth,
-        height: window.innerHeight,
+
     });
 
     useEffect(() => {
 
-        //console.log(windowSize.width)
         if(windowSize.width <= 768){
 
             setNavVisible(false);
@@ -52,168 +41,73 @@ export const Bar = ( { getMessages, isLoadingResponseText, isLoadingPrevText, se
 
     const navigate = useNavigate();
 
-    const session_limit = useRef(20);
-    const loading_prev_sessions = useRef(false);
-
-    const contentRef = useRef(null);
-    const previousScrollHeightRef = useRef(null);
-
-    const { isLogedIn } = useAuth();
-
-    const [ sessions, setSessions] = useState([]);
-
-    const [isLoadingSessions, setIsLoadingSessions] = useState(false);
-    const no_more_session = useRef(false);
-
-    const first_load = useRef(true);
-    const block_session_request = useRef(false);
-
-    const getSessions = async () =>{
-
-        try{
-        
-            if(block_session_request.current){
-
-                block_session_request.current = false;
-
-                return;
-
-            }
-
-            if(isLoadingSessions){ return }
-
-            setIsLoadingSessions(true);
-
-            //console.log('getsession')
-
-
-            const response = await api.get('/getSessions',
-                {
-
-                params: { 
-                limit: Number(session_limit.current),
-                },
-
-            });
-
-            const data =  response.data.sessions;
-
-            if(data){
-
-                if(loading_prev_sessions.current){
-        
-                    setSessions(prev => [...prev, ...data]);
-
-                }
-                else {
-                    
-                    setSessions(data);
-                    
-                    no_more_session.current = false;
-                  
-
-                }
-                
-                
-                if(data.length < 20){
-
-                    no_more_session.current = true;
-
-                }
-
-            }
-            
-
-        }catch(err){
-
-            console.log(err)
-
-        }finally{
-
-            setIsLoadingSessions(false);
-
-        }
-
-    }
-
-    useEffect(() => {
-
-        if(isLogedIn && !isLoadingPrevText && !isLoadingResponseText){
-
-            session_limit.current = 20;
-            //console.log('loadfirst')
-            void getSessions();
-
-        }
-
-    }, [isLogedIn, isLoadingPrevText, isLoadingResponseText])
 
     useEffect(() => {
 
         const handleClickOutside = (event) => {
+            
+            if (cardRef.current && !cardRef.current.contains(event.target)) {
 
-        if (cardRef.current && !cardRef.current.contains(event.target)) {
-            setIsOpen(false); 
-        }
+                setIsOpen(false); 
+
+            }
+
+            if (navRef.current && !navRef.current.contains(event.target) && windowSize.width <= 768) {
+
+                setNavVisible(false); 
+
+            }
         };
 
         if (isOpen) {
+
             document.addEventListener('mousedown', handleClickOutside);
+
+        }
+
+        if (navVisible) {
+
+            document.addEventListener('mousedown', handleClickOutside);
+
         }
 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
 
-    }, [isOpen]);
+    }, [isOpen, navVisible]);
+
+    const { sessions, isLoadingSessions, handleScroll, listRef} = useSession(isLoadingResponseText);
+
+    const [theme, setTheme] = useState(() => {
+        return localStorage.getItem('theme') || 'light';
+    });
 
     useEffect(() => {
+        // 2. Beállítjuk a DOM-ra és a meta tagre a aktuális témát
+        document.documentElement.setAttribute('data-theme', theme);
+
+        let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (!metaThemeColor) {
+            metaThemeColor = document.createElement('meta');
+            metaThemeColor.name = 'theme-color';
+            document.head.appendChild(metaThemeColor);
+        }
         
-        const container = contentRef.current;
+        metaThemeColor.setAttribute('content', theme === 'dark' ? '#0f172a' : '#ffffff');
 
-        if (!container) return; 
-    
-        const handleScroll = () => {
-            
-          const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 10;
+    }, [theme]); // Akkor fut le, ha a theme változik
 
-          if (isNearBottom && !loading_prev_sessions.current && !no_more_session.current) {
-    
-            session_limit.current += 20;
-    
-            previousScrollHeightRef.current = container.scrollHeight;
-
-            loading_prev_sessions.current = true;
-           // console.log('loadlast')
-            void getSessions();
-    
-          }
-    
-        };
-  
-        container.addEventListener('scroll', handleScroll);
-    
-    
-        return () => {
-          container.removeEventListener('scroll', handleScroll);
-        };
-
-    }, [isLoadingSessions]);
-
-
-    useEffect(() => {
-
-        loading_prev_sessions.current = false;
-
-    }, [sessions])
-
-
-
+    const toggleTheme = () => {
+        const nextTheme = theme === 'dark' ? 'light' : 'dark';
+        setTheme(nextTheme);
+        localStorage.setItem('theme', nextTheme);
+    };
 
     return(
        <div className="csb-container">
             {navVisible ? (
-                <div className="csb-sidebar">
+                <div className="csb-sidebar" ref={navRef}>
 
                     {isLoadingSessions && (
 
@@ -241,7 +135,7 @@ export const Bar = ( { getMessages, isLoadingResponseText, isLoadingPrevText, se
                             </button>
                         </div>
                         
-                        <button type="button" className="csb-new-chat-btn" onClick={() => setNewTab()}>
+                        <button type="button" className="csb-new-chat-btn" onClick={() => {setOnSelectSessionId(null)}}>
                             + New chat
                         </button>
                         
@@ -249,7 +143,7 @@ export const Bar = ( { getMessages, isLoadingResponseText, isLoadingPrevText, se
                     </div>
 
                     {/* Középső rész: Korábbi beszélgetések (Görgethető) */}
-                    <div className="csb-mid" ref={contentRef}>
+                    <div className="csb-mid" ref={listRef} onScroll={handleScroll}>
                         {sub.status !== 'Basic' && sub.status !== null && (
                             <div className="csb-sessions">
                                 {[...sessions].map((chat) => (
@@ -257,20 +151,20 @@ export const Bar = ( { getMessages, isLoadingResponseText, isLoadingPrevText, se
                                         type="button"
                                         key={chat.id}
                                         onClick={() => {
-                                            if(selected_session_id.current !== chat.session_crypted){
+                                            
+                                            if(onSelectSessionId !== chat.session_crypted){
 
-                                                limit.current = 5;
-                                                selected_session_id.current = chat.session_crypted;
-                                                no_more_message_to_load.current = false;
-                                                getting_messages.current = true;
-                                                setCurrentSessionId(chat.session_crypted)
-                                                setIsLoadingPrevText(true)
-                                                block_session_request.current = true;
-                                                getMessages();
+                                                setOnSelectSessionId(chat.session_crypted);
+                                                
+                                                if(windowSize.width <= 768){
+                                           
+                                                    setNavVisible(false);
+                                                    
+                                                }
 
                                             }
                                         }}
-                                        className={`csb-session-btn ${currentSessionId === chat.session_crypted ? 'csb-session-active' : ''}`}
+                                        className={`csb-session-btn ${onSelectSessionId === chat.session_crypted ? 'csb-session-active' : ''}`}
                                     >
                                         {chat.session_placeholder}
                                     </button>
@@ -282,6 +176,39 @@ export const Bar = ( { getMessages, isLoadingResponseText, isLoadingPrevText, se
 
                     {/* Alsó rész: Profil és Kreditek */}
                     <div className="csb-bottom">
+                        
+                            { theme === 'dark' && (
+                                <div className="csb-theme-toggle">
+                                    <button className="csb-theme-btn" id="themeToggleBtn" aria-label="Téma váltása" onClick={() => toggleTheme('light')}>
+                                        <svg className="csb-theme-icon csb-theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                        <span className="csb-theme-text">Light mode</span>
+                                    </button>
+                                    
+                                </div>
+                            )}
+                            { theme === 'light' && (
+                                <div className="csb-theme-toggle">
+                                    <button className="csb-theme-btn" id="themeToggleBtn" aria-label="Téma váltása" onClick={() => toggleTheme('dark')}>
+                                        <svg className="csb-theme-icon csb-theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="2"/>
+                                            <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                            <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                            <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                            <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                        </svg>
+                                        <span className="csb-theme-text">Dark mode</span>
+                                    </button>
+                                    
+                                </div>
+                            )}
+                        
+                 
                         <div className="csb-profile-section">
                             <button  
                                 type="button" 

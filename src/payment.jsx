@@ -1,9 +1,8 @@
-import { React, useState } from 'react';
+import { useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 import './payment.css';
-import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
@@ -12,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { api } from './interceptor';
 import { useNavigate } from 'react-router-dom';
 import { resfreshStates } from '../useStates/refreshStates';
+
 const subscriptionSchema = z.object({
   isCompany: z.boolean().optional(),
   cname: z.string().optional(),
@@ -33,13 +33,11 @@ const subscriptionSchema = z.object({
 export const Payment = () => {
 
     const queryClient = useQueryClient();
-    const [paypall, setPaypall] = useState(true);
-
     const location = useLocation();
     const { plan, price } = location.state || {};
 
     const initialOptions = {
-        "client-id": "AZP5Ri9qYNULiTcJNi8Y-qELLFD0n0pZiuzKhUMo2m_LRl_rbqAsHYYGpEajKsBOClzF9XuwGZMHvS4h",
+        "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID,
         vault: true,
         intent: "subscription",
         currency: "USD" 
@@ -78,18 +76,18 @@ export const Payment = () => {
                 // Rákérdezünk a backendnél a státuszra
                 const response = await api.get('/polling');
 
-                console.log(response)
+                //console.log(response)
   
                 if (response.data.message === false) {
                     clearInterval(interval);
                     setPolling(false)
-                    alert("Sikeres fizetés! A fiókod aktiválva lett.");
+                    //alert("Sikeres fizetés! A fiókod aktiválva lett.");
                     nav('/')
                     resfreshStates(queryClient)
                 }
 
             } catch (error) {
-                console.error("Hiba a státusz lekérdezésekor", error);
+                console.error("Error", error);
                 setPolling(false)
             }
 
@@ -97,7 +95,7 @@ export const Payment = () => {
             if (attempts >= maxAttempts) {
                 clearInterval(interval);
                 setPolling(false)
-                alert("A fizetés feldolgozása a vártnál tovább tart. Kérlek, frissíts rá az oldalra pár perc múlva!");
+                //alert("A fizetés feldolgozása a vártnál tovább tart. Kérlek, frissíts rá az oldalra pár perc múlva!");
             }
         }, 1000); // 1000 ms = 1 másodperc
     };
@@ -196,63 +194,55 @@ export const Payment = () => {
                         </label>
                     </div> 
 
-                    {paypall && (
-                        <PayPalScriptProvider options={initialOptions}>
-                            <div 
-                                className="cpay-paypal-wrapper"
-                                style={{ 
-                                    pointerEvents: isFormValid ? 'auto' : 'none', 
-                                    opacity: isFormValid ? 1 : 0.5,
-                                }}
-                            >
-                                <PayPalButtons 
-                                    style={{ layout: "vertical" }}
-                                    createSubscription={async (data, actions) => {
-                                        try {
+                    <PayPalScriptProvider options={initialOptions}>
+                        <div 
+                            className="cpay-paypal-wrapper"
+                            style={{ 
+                                pointerEvents: isFormValid ? 'auto' : 'none', 
+                                opacity: isFormValid ? 1 : 0.5,
+                            }}
+                        >
+                            <PayPalButtons 
+                                style={{ layout: "vertical" }}
+                                createSubscription={async (data, actions) => {
+                                    try {
 
-                                            const response = await api.post('/create-subscription', {
-                                                plan: plan,
-                                                name: getValues('cname'),
-                                                vat: getValues('tax')
-                                            });
-                                            return response.data.subscriptionID;
-                                        } catch (err) {
-                                            const serverError = err.response?.data?.error || "Error occurred";
-                                            setError("tax", {
-                                                type: "server",
-                                                message: serverError
-                                            });
-                                        }
-                                    }}
-                                    onApprove={async (data, actions) => {
-                                        startPolling();
-                                    }}
-                                    onError={(err) => {
-                                        console.error("PayPal error:", err);
-                                    }}
-                                    onCancel={async (data) => {
-                                        try {
-                                            await api.post('/paypal-cancel-purchase');
-                                            console.log("A vásárlást megszakították.");
-                                        } catch (err) {
-                                            console.error("Hiba a megszakítás feldolgozásakor:", err);
-                                        }
-                                    }}
-                                />
-                            </div>
-                        </PayPalScriptProvider>
-                    )}
+                                        const response = await api.post('/create-subscription', {
+                                            plan: plan,
+                                            name: getValues('cname'),
+                                            vat: getValues('tax')
+                                        });
+                                        return response.data.subscriptionID;
+                                    } catch (err) {
+                                        const serverError = err.response?.data?.error || "Error occurred";
+                                        setError("tax", {
+                                            type: "server",
+                                            message: serverError
+                                        });
+                                    }
+                                }}
+                                onApprove={async (data, actions) => {
+                                    startPolling();
+                                }}
+                                onError={(err) => {
+                                    console.error("PayPal error:", err);
+                                }}
+                                onCancel={async (data) => {
+                                    try {
+                                        await api.post('/paypal-cancel-purchase');
+                                    
+                                    } catch (err) {
+                                        console.error("Error:", err);
+                                    }
+                                }}
+                            />
+                        </div>
+                    </PayPalScriptProvider>
                 </div>
             </div>
         </div>
 
 
     );
-
-}
-
-export const Change = () => {
-
-    return (<div></div>);
 
 }
