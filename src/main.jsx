@@ -44,7 +44,7 @@ export function useAuth() {
 createRoot(document.getElementById('root')).render(
   
   <StrictMode>
-    <GoogleOAuthProvider clientId="711670289986-5fuuf4adudbcugr0k6u9ckq10feabbvv.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="783229619918-30j46jcr4mmf2qcoe10cjnuocmih7hmt.apps.googleusercontent.com">
       <QueryClientProvider client={queryClient}>
         <BrowserRouter> 
           <AuthProvider>
