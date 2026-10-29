@@ -120,7 +120,7 @@ export const useSession = (reload) => {
         }
 
     }, [isLogedIn, reload]);
-
-
+    console.log(sessions);
+ 
     return { sessions, isLoadingSessions, handleScroll, listRef }
 } 
