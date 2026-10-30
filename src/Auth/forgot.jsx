@@ -57,7 +57,7 @@ export const ResetPage = () =>{
       setSuccessMessage(response.data.message);
       
       setTimeout(() => {
-        navigate('/login');
+        navigate('/loginpage');
       }, 3000);
 
     } catch (error) {
