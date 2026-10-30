@@ -11,7 +11,7 @@
 
 }
 .base-shield{
-  max-height: 100dvh;
+  max-height: fit-content;
   overflow-y: auto;
 }
 /* Navigációs sáv */
