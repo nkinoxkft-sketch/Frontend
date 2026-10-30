@@ -284,6 +284,9 @@
   background-color: var(--cdash-bg-main);
   overflow-x: hidden;
   transition: background-color 0.3s ease;
+   -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 60px), transparent 100%);
+  mask-image: linear-gradient(to bottom, black calc(100% - 60px), transparent 100%);
+
 }
 
 /* Görgetősáv formázása */
