@@ -1,7 +1,23 @@
 <!doctype html>
 <html lang="en">
   <head> 
+    <script>
+      (function() {
+        try {
+          // Csak akkor hajtjuk végre, ha az URL tartalmazza a '/dashboard' útvonalat
+          if (window.location.pathname.startsWith('/dashboard')) {
+            var savedTheme = localStorage.getItem('theme');
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
 
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            document.documentElement.style.backgroundColor = isDark ? '#131314' : '#F8F9FA';
+          }
+        } catch (e) {
+          console.error("Témaváltó script hiba:", e);
+        }
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 

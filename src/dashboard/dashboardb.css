@@ -242,6 +242,13 @@
    ========================================= */
 
 
+.dash-bg{
+
+  background-color: var(--cdash-bg-main);
+  overflow: hidden;
+  
+}
+
 .cdash-screen {
   display: flex;
   height: 100vh;

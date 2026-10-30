@@ -1,3 +1,4 @@
+@charset "UTF-8";
 
 :root {
   --bg-paper: #F1F5F9; /* Meleg törtfehér */
@@ -21,10 +22,6 @@
 }
 
 
-
-.dash-bg{
-  overflow: hidden;
-}
 body {
 
   background-color: var(--bg-paper);
@@ -34,11 +31,6 @@ body {
 
 }
 
-.dash-bg{
-
-  background-color: var(--cdash-bg-main);
-  
-}
 .mainPage{
 
   background-color: var(--bg-paper);
@@ -104,6 +96,14 @@ scrollbar-width: none;
 .starterpage{
 
     background-color: var(--bg-paper);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    min-height: 90dvh;
+
+    border-bottom: 1px solid #c5c4c2;
 
 }
 
@@ -224,13 +224,13 @@ scrollbar-width: none;
     flex-wrap: wrap;
     justify-content: center;
     text-align: center;
-    padding-top: 15rem;
-    padding-bottom: 15rem;
+
     align-items: center;
-    border-bottom: 1px solid #c5c4c2;
+
 
 
 }
+
 .orangeMini{
 
     color: #D97757;
